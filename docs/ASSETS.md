@@ -1,6 +1,6 @@
 # Temporary portrait
 
-`public/images/portrait-placeholder.jpg` is a temporary sample portrait, not Joey Dong.
+`public/images/portrait-placeholder.jpg` is a temporary sample portrait, not JoeyDDong.
 
 - Source: https://github.com/StartBootstrap/startbootstrap-agency/blob/master/dist/assets/img/team/1.jpg
 - Retrieved: 2026-10-12

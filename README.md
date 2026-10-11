@@ -1,4 +1,4 @@
-# Joey Dong — Personal Homepage
+# JoeyDDong — Personal Homepage
 
 Astro + TypeScript + native CSS, built as a static site.
 
@@ -32,7 +32,7 @@ The production output is `dist/`. This change does not deploy the site or change
 
 - On an unprefixed URL, choose the saved language, then the first supported browser language, then English.
 - An explicit localized URL is respected. `?lang=en`, `?lang=zh`, and `?lang=ja` can select a language when arriving from another subsite.
-- Language links stay on the equivalent Home or Portfolio page and remember the choice.
+- A language dropdown in the top-right header stays on the equivalent Home or Portfolio page and remembers the choice.
 - The `joey_locale` cookie is scoped to `joeyddong.top` on that domain and its subdomains; the browser's local storage is an additional fallback.
 - Without JavaScript, every language page and the language links still work. Automatic language selection requires JavaScript.
 

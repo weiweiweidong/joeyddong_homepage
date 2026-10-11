@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { messages } from '../lib/i18n';
+import { site } from '../lib/site';
 const copy = messages.en.notFound;
 ---
-<BaseLayout locale="en" page="notFound" title="Page not found — Joey Dong" description={copy.description}>
+<BaseLayout locale="en" page="notFound" title={`Page not found — ${site.name}`} description={copy.description}>
   <main id="main-content" class="shell not-found"><p class="eyebrow">404</p><h1>{copy.title}</h1><p>{copy.description}</p><a class="text-link" href="/">{copy.back} ↗</a></main>
 </BaseLayout>

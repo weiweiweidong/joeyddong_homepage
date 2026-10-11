@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LanguageSwitcher from './LanguageSwitcher.astro';
 import { messages, pagePath, type Locale } from '../lib/i18n';
 import { site, destinationUrl } from '../lib/site';
 interface Props { locale: Locale }
@@ -8,14 +7,12 @@ const { locale } = Astro.props;
 const copy = messages[locale];
 ---
 
-<BaseLayout locale={locale} page="home" title="Joey Dong — Ideas, Work & Life" description={copy.home.aboutDescription}>
+<BaseLayout locale={locale} page="home" title={`${site.name} — Ideas, Work & Life`} description={copy.home.aboutDescription}>
   <main id="main-content" class="home-main">
     <section class="hero shell" aria-labelledby="home-title">
       <div class="hero-content">
-        <p class="eyebrow">{copy.home.eyebrow}</p>
-        <h1 class="hero-title" id="home-title"><span>Joey Dong.</span><span>{copy.home.headline}</span></h1>
+        <h1 class="hero-title" id="home-title"><span>{copy.home.greeting}</span><span>{copy.home.headline}</span></h1>
         <p class="hero-description">{copy.home.tagline}</p>
-        <LanguageSwitcher locale={locale} page="home" />
       </div>
       <a class="scroll-cue" href="#explore-title" aria-label={copy.home.exploreEyebrow}><span aria-hidden="true">↓</span></a>
     </section>
@@ -49,7 +46,7 @@ const copy = messages[locale];
     <section class="about-preview content-shell section-space" aria-labelledby="about-title">
       <p class="eyebrow">{copy.home.aboutEyebrow}</p><h2 id="about-title">{copy.home.aboutTitle}</h2>
       <a class="profile-card" href={pagePath(locale, 'portfolio')}>
-        <div class="profile-copy"><p class="card-kicker">04 / THE PERSON BEHIND THE PAGES</p><h3>Joey Dong.</h3><p>{copy.home.aboutDescription}</p><span class="profile-link">{copy.home.aboutLink}<span class="circle-arrow" aria-hidden="true">↗</span></span></div>
+        <div class="profile-copy"><p class="card-kicker">04 / THE PERSON BEHIND THE PAGES</p><h3>{site.name}.</h3><p>{copy.home.aboutDescription}</p><span class="profile-link">{copy.home.aboutLink}<span class="circle-arrow" aria-hidden="true">↗</span></span></div>
         <figure class="profile-portrait"><img src={site.portrait} alt={copy.home.portraitAlt} width="500" height="500" loading="lazy" /><figcaption>{copy.home.portraitCaption}</figcaption></figure>
       </a>
     </section>

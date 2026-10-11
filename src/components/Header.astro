@@ -1,39 +1,48 @@
 ---
 import { messages, pagePath, type Locale, type Page } from '../lib/i18n';
-import { navigation } from '../lib/site';
+import { navigation, site } from '../lib/site';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 interface Props { locale: Locale; page: Page | 'notFound' }
 const { locale, page } = Astro.props;
 const copy = messages[locale];
 ---
 
 <header class="site-header shell" id="top">
-  <a class="wordmark" href={pagePath(locale)} aria-label="Joey Dong — Home">JOEY DONG<span>.</span></a>
-  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
-    <span>{copy.menu}</span><span class="menu-symbol" aria-hidden="true">+</span>
-  </button>
+  <a class="wordmark" href={pagePath(locale)} aria-label={`${site.name} — Home`}>{site.name}<span>.</span></a>
   <nav class="site-navigation" id="site-navigation" aria-label={copy.mainNavigation}>
     {navigation(locale).map((item) => (
       <a href={item.href} aria-current={item.key === page ? 'page' : undefined}>{copy.navigation[item.key]}</a>
     ))}
   </nav>
+  <div class="header-actions">
+    <button class="menu-toggle" type="button" aria-label={copy.menu} aria-expanded="false" aria-controls="site-navigation">
+      <span class="menu-label">{copy.menu}</span><span class="menu-symbol" aria-hidden="true">+</span>
+    </button>
+    <LanguageSwitcher locale={locale} page={page === 'portfolio' ? 'portfolio' : 'home'} />
+  </div>
 </header>
 
 <script>
   document.documentElement.classList.add('js-enabled');
   const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
   const header = document.querySelector<HTMLElement>('.site-header');
+  const languageDropdown = header?.querySelector<HTMLDetailsElement>('.language-switcher');
   const setOpen = (open: boolean) => {
     toggle?.setAttribute('aria-expanded', String(open));
     header?.classList.toggle('menu-open', open);
+    if (open) languageDropdown?.removeAttribute('open');
   };
   toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  languageDropdown?.addEventListener('toggle', () => {
+    if (languageDropdown.open) setOpen(false);
+  });
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
       setOpen(false);
       toggle.focus();
     }
   });
-  header?.querySelector('nav')?.addEventListener('click', (event) => {
+  header?.querySelector('.site-navigation')?.addEventListener('click', (event) => {
     if ((event.target as HTMLElement).closest('a')) setOpen(false);
   });
 </script>

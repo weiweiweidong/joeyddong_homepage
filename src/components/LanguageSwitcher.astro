@@ -2,22 +2,44 @@
 import { locales, messages, languageNames, htmlLanguages, pagePath, type Locale, type Page } from '../lib/i18n';
 interface Props { locale: Locale; page: Page }
 const { locale, page } = Astro.props;
+const optionNames: Record<Locale, string> = { en: 'English', zh: '中文', ja: '日本語' };
 ---
 
-<nav class="language-switcher" aria-label={messages[locale].chooseLanguage}>
-  {locales.map((language) => (
-    <a href={pagePath(language, page)} lang={htmlLanguages[language]} hreflang={htmlLanguages[language]} data-language={language} aria-current={locale === language ? 'true' : undefined}>
-      {languageNames[language]}
-    </a>
-  ))}
-</nav>
+<details class="language-switcher">
+  <summary class="language-toggle" aria-label={`${messages[locale].chooseLanguage}: ${optionNames[locale]}`}>
+    <svg class="language-globe" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
+    <span>{languageNames[locale]}</span>
+    <svg class="language-chevron" viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg>
+  </summary>
+  <nav class="language-options" aria-label={messages[locale].chooseLanguage}>
+    {locales.map((language) => (
+      <a href={pagePath(language, page)} lang={htmlLanguages[language]} hreflang={htmlLanguages[language]} data-language={language} aria-label={optionNames[language]} aria-current={locale === language ? 'true' : undefined}>
+        <span>{optionNames[language]}</span><span class="language-check" aria-hidden="true">{locale === language ? '✓' : ''}</span>
+      </a>
+    ))}
+  </nav>
+</details>
 
 <script>
   import { rememberLocale, isLocale } from '../lib/locale-preference';
-  document.querySelectorAll<HTMLAnchorElement>('[data-language]').forEach((link) => {
+  const dropdown = document.querySelector<HTMLDetailsElement>('.language-switcher');
+  const summary = dropdown?.querySelector<HTMLElement>('summary');
+  dropdown?.querySelectorAll<HTMLAnchorElement>('[data-language]').forEach((link) => {
     link.addEventListener('click', () => {
       const locale = link.dataset.language;
       if (isLocale(locale)) rememberLocale(locale);
     });
+  });
+  document.addEventListener('click', (event) => {
+    if (event.target instanceof Node && !dropdown?.contains(event.target)) dropdown?.removeAttribute('open');
+  });
+  dropdown?.addEventListener('focusout', (event) => {
+    if (!dropdown.contains(event.relatedTarget as Node | null)) dropdown.removeAttribute('open');
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && dropdown?.open) {
+      dropdown.open = false;
+      summary?.focus();
+    }
   });
 </script>
