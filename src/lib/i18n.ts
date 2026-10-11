@@ -1,0 +1,130 @@
+export const locales = ['en', 'zh', 'ja'] as const;
+export type Locale = (typeof locales)[number];
+export type Page = 'home' | 'portfolio';
+
+export function pagePath(locale: Locale, page: Page = 'home') {
+  const prefix = locale === 'en' ? '' : `/${locale}`;
+  return `${prefix}/${page === 'portfolio' ? 'portfolio/' : ''}`;
+}
+
+const en = {
+  skip: 'Skip to content',
+  menu: 'Menu',
+  mainNavigation: 'Main navigation',
+  chooseLanguage: 'Choose language',
+  navigation: { home: 'Home', blog: 'Blog', projects: 'Projects', photography: 'Photography', portfolio: 'Portfolio' },
+  home: {
+    eyebrow: 'A PERSONAL SPACE',
+    tagline: 'Thoughts, things I build, and places I see.',
+    portraitCaption: 'Temporary portrait',
+    portraitAlt: 'A temporary sample portrait of a person holding a notebook; this is not Joey Dong.',
+    marker: 'IDEAS, WORK & LIFE',
+    meet: 'Meet Joey',
+    exploreEyebrow: 'A FEW PLACES TO START',
+    exploreTitle: 'A world of interests.',
+    blogDescription: 'Notes on programming, things I learn, and ideas worth keeping.',
+    projectsDescription: 'Coding, AI-assisted experiments, and data science. Different ways to build and explore.',
+    photographyDescription: 'A collection of photographs and things that catch my attention.',
+    aboutEyebrow: 'THE PERSON BEHIND THE PAGES',
+    aboutTitle: 'A little about me.',
+    aboutDescription: 'I’m Joey Dong. This is my personal home for projects, writing, and photography — a place to collect what I make and what I discover along the way.',
+    aboutLink: 'More about me',
+  },
+  portfolio: {
+    eyebrow: 'ABOUT ME',
+    title: 'Hello, I’m Joey.',
+    tagline: 'A little more about the person behind the pages.',
+    introduction: 'My personal website brings together coding projects, data science, writing, and photography. It is a place to share my work, keep track of what I learn, and explore different interests.',
+    interestsTitle: 'What I explore',
+    interests: ['Coding', 'Vibe Coding', 'Data Science', 'Photography'],
+    workTitle: 'Find my work',
+    githubLabel: 'Explore my GitHub',
+    blogLabel: 'Read my blog',
+    back: 'Back to Home',
+  },
+  footer: { note: 'Thoughts, work, and everyday discoveries.', top: 'Back to top' },
+  notFound: { title: 'This page isn’t here.', description: 'Let’s get you back to a familiar place.', back: 'Back to Home' },
+};
+
+export const messages = {
+  en,
+  zh: {
+    skip: '跳转到正文',
+    menu: '菜单',
+    mainNavigation: '主导航',
+    chooseLanguage: '选择语言',
+    navigation: { home: '首页', blog: '博客', projects: '项目', photography: '摄影', portfolio: '关于我' },
+    home: {
+      eyebrow: 'A PERSONAL SPACE',
+      tagline: '记录思考，创造作品，探索世界。',
+      portraitCaption: '临时肖像示意',
+      portraitAlt: '临时示意照片：一位手持笔记本的人，并非 Joey Dong 本人。',
+      marker: 'IDEAS, WORK & LIFE',
+      meet: '认识 Joey',
+      exploreEyebrow: '从这里开始',
+      exploreTitle: '让好奇心有处安放。',
+      blogDescription: '编程笔记、学习记录，以及值得留下来的思考。',
+      projectsDescription: 'Coding、AI 辅助实验与 Data Science，用不同的方式创造和探索。',
+      photographyDescription: '用照片记录那些吸引我目光的画面。',
+      aboutEyebrow: '这些页面背后的人',
+      aboutTitle: '关于我，多一点。',
+      aboutDescription: '我是 Joey Dong。这里是我的个人空间，用来分享项目、文章和摄影，也收集一路上的创作与发现。',
+      aboutLink: '进一步了解我',
+    },
+    portfolio: {
+      eyebrow: '关于我',
+      title: '你好，我是 Joey。',
+      tagline: '认识这些页面背后的我。',
+      introduction: '这个个人网站汇集了我的编程项目、数据科学探索、文章和摄影作品。我希望在这里分享创作、记录学习，也持续探索不同的兴趣。',
+      interestsTitle: '我的探索方向',
+      interests: ['Coding', 'Vibe Coding', 'Data Science', 'Photography'],
+      workTitle: '找到我的作品',
+      githubLabel: '访问我的 GitHub',
+      blogLabel: '阅读我的博客',
+      back: '返回首页',
+    },
+    footer: { note: '思考、作品与日常发现。', top: '回到顶部' },
+    notFound: { title: '这个页面还不在这里。', description: '先回到熟悉的地方吧。', back: '返回首页' },
+  },
+  ja: {
+    skip: '本文へスキップ',
+    menu: 'メニュー',
+    mainNavigation: 'メインナビゲーション',
+    chooseLanguage: '言語を選択',
+    navigation: { home: 'ホーム', blog: 'ブログ', projects: 'プロジェクト', photography: '写真', portfolio: '自己紹介' },
+    home: {
+      eyebrow: 'A PERSONAL SPACE',
+      tagline: '考えを綴り、ものを作り、世界を探る。',
+      portraitCaption: '仮のポートレート',
+      portraitAlt: 'ノートを持つ人物の仮の写真です。Joey Dong 本人ではありません。',
+      marker: 'IDEAS, WORK & LIFE',
+      meet: 'Joey について',
+      exploreEyebrow: 'ここから始める',
+      exploreTitle: '好奇心の、その先へ。',
+      blogDescription: 'プログラミングのメモ、学びの記録、残しておきたい考え。',
+      projectsDescription: 'Coding、AI を活用した実験、Data Science。さまざまな形で作り、探る。',
+      photographyDescription: '心に留まった景色や瞬間を、写真に残す。',
+      aboutEyebrow: 'このサイトを作る人',
+      aboutTitle: '私について、もう少し。',
+      aboutDescription: 'Joey Dong です。ここはプロジェクト、文章、写真を共有する私の個人サイトです。作ったものや、日々の発見を集めています。',
+      aboutLink: '自己紹介を読む',
+    },
+    portfolio: {
+      eyebrow: '自己紹介',
+      title: 'こんにちは、Joey です。',
+      tagline: 'このサイトを作る私について。',
+      introduction: 'この個人サイトでは、プログラミングのプロジェクト、データサイエンス、文章、写真を紹介しています。制作や学びを記録しながら、さまざまな興味を探っていきたいと思っています。',
+      interestsTitle: '興味のある分野',
+      interests: ['Coding', 'Vibe Coding', 'Data Science', 'Photography'],
+      workTitle: '活動を見る',
+      githubLabel: 'GitHub を見る',
+      blogLabel: 'ブログを読む',
+      back: 'ホームへ戻る',
+    },
+    footer: { note: '思考、制作、日々の発見。', top: 'ページの先頭へ' },
+    notFound: { title: 'このページは見つかりません。', description: 'ホームから、もう一度始めましょう。', back: 'ホームへ戻る' },
+  },
+} satisfies Record<Locale, typeof en>;
+
+export const languageNames: Record<Locale, string> = { en: 'EN', zh: '中文', ja: '日本語' };
+export const htmlLanguages: Record<Locale, string> = { en: 'en', zh: 'zh-CN', ja: 'ja' };

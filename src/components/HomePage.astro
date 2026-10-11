@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { messages, pagePath, type Locale } from '../lib/i18n';
+import { site, destinationUrl, type Destination } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = messages[locale];
+const destinations: { key: Destination; description: string }[] = [
+  { key: 'blog', description: copy.home.blogDescription },
+  { key: 'projects', description: copy.home.projectsDescription },
+  { key: 'photography', description: copy.home.photographyDescription },
+];
+---
+
+<BaseLayout locale={locale} page="home" title="Joey Dong — Ideas, Work & Life" description={copy.home.aboutDescription}>
+  <main id="main-content" class="shell">
+    <section class="hero" aria-labelledby="home-title">
+      <p class="eyebrow">{copy.home.eyebrow}</p>
+      <h1 class="hero-title" id="home-title">Joey Dong<span>.</span></h1>
+      <div class="hero-intro"><p>{copy.home.tagline}</p><LanguageSwitcher locale={locale} page="home" /></div>
+      <figure class="hero-portrait">
+        <img src={site.portrait} alt={copy.home.portraitAlt} width="500" height="500" fetchpriority="high" />
+        <figcaption>{copy.home.portraitCaption}</figcaption>
+      </figure>
+      <div class="hero-caption"><span>{copy.home.marker}</span><a href={pagePath(locale, 'portfolio')}>{copy.home.meet} ↓</a></div>
+    </section>
+    <section class="explore section-space" aria-labelledby="explore-title">
+      <p class="eyebrow">{copy.home.exploreEyebrow}</p>
+      <h2 id="explore-title">{copy.home.exploreTitle}</h2>
+      <div class="explore-list">
+        {destinations.map((destination, index) => (
+          <a class="explore-row" href={destinationUrl(destination.key, locale)}>
+            <span class="row-number" aria-hidden="true">0{index + 1}</span>
+            <h3>{copy.navigation[destination.key]}</h3>
+            <p>{destination.description}</p>
+            <span class="row-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
+    <section class="about-preview section-space" aria-labelledby="about-title">
+      <div><p class="eyebrow">{copy.home.aboutEyebrow}</p><h2 id="about-title">{copy.home.aboutTitle}</h2></div>
+      <div class="about-copy"><p>{copy.home.aboutDescription}</p><a class="text-link" href={pagePath(locale, 'portfolio')}>{copy.home.aboutLink} <span aria-hidden="true">↗</span></a></div>
+    </section>
+  </main>
+</BaseLayout>

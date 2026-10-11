@@ -1,0 +1,23 @@
+---
+import { locales, messages, languageNames, htmlLanguages, pagePath, type Locale, type Page } from '../lib/i18n';
+interface Props { locale: Locale; page: Page }
+const { locale, page } = Astro.props;
+---
+
+<nav class="language-switcher" aria-label={messages[locale].chooseLanguage}>
+  {locales.map((language) => (
+    <a href={pagePath(language, page)} lang={htmlLanguages[language]} hreflang={htmlLanguages[language]} data-language={language} aria-current={locale === language ? 'true' : undefined}>
+      {languageNames[language]}
+    </a>
+  ))}
+</nav>
+
+<script>
+  import { rememberLocale, isLocale } from '../lib/locale-preference';
+  document.querySelectorAll<HTMLAnchorElement>('[data-language]').forEach((link) => {
+    link.addEventListener('click', () => {
+      const locale = link.dataset.language;
+      if (isLocale(locale)) rememberLocale(locale);
+    });
+  });
+</script>
