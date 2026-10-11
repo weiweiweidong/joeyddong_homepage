@@ -2,7 +2,7 @@
 
 Astro + TypeScript + native CSS, built as a static site.
 
-The visual direction is editorial: warm white, large serif headings, a restrained brick-red accent, generous spacing, and a wide portrait area.
+The visual direction is inspired by Kickpush: a coral-red canvas, oversized white sans-serif headings, a centered typographic hero, colorful illustrated section cards, and a portrait in the personal introduction section.
 
 ## Run locally
 
