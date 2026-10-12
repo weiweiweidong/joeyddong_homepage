@@ -2,11 +2,11 @@ import { pagePath, type Locale } from './i18n';
 
 export const site = {
   name: 'JoeyDDong',
-  url: 'https://joeyddong.top',
+  url: 'https://www.joeyddong.top',
   github: 'https://github.com/weiweiweidong',
   portrait: '/images/portrait-placeholder.jpg',
   destinations: {
-    blog: import.meta.env.PUBLIC_BLOG_URL || 'https://blog.joeyddong.top',
+    blog: import.meta.env.PUBLIC_BLOG_URL || 'https://joeyddong.top',
     projects: import.meta.env.PUBLIC_PROJECTS_URL || 'https://projects.joeyddong.top',
     photography: import.meta.env.PUBLIC_PHOTOGRAPHY_URL || 'https://photography.joeyddong.top',
   },

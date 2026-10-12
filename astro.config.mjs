@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://joeyddong.top',
+  site: 'https://www.joeyddong.top',
   output: 'static',
   trailingSlash: 'always',
   devToolbar: { enabled: false },
