@@ -13,7 +13,11 @@ Existing production: homepage Worker `joeyddong-homepage` bound to `www.joeyddon
 
 ## Status
 
-New domain added to Cloudflare Free with assigned nameservers `aisha.ns.cloudflare.com` and `nile.ns.cloudflare.com`. Alibaba registrar has saved those nameservers. Homepage URLs, subsite link defaults, environment example, and language cookie scope are prepared locally for the new domain. `pnpm check` and `pnpm build` passed. Activation, publication, and verification remain in progress.
+New domain added to Cloudflare Free with assigned nameservers `aisha.ns.cloudflare.com` and `nile.ns.cloudflare.com`. Alibaba registrar has saved those nameservers, and the public resolver at `1.1.1.1` now returns them. Worker `joeyddong-homepage` has the custom domain `joeyddong-site.top`; the existing `www.joeyddong.top` homepage alias was retained. Production build variable `PUBLIC_BLOG_URL` is now `https://blog.joeyddong-site.top`.
+
+Homepage URLs, subsite link defaults, environment example, and language cookie scope were updated and published from commit `b5fa52d`. `pnpm check` and `pnpm build` passed. On 2026-10-12 at approximately 23:33 JST, all six homepage and Portfolio routes returned HTTPS 200, with canonical URLs on `joeyddong-site.top` and the three prepared subsite links on the new domain. Browser verification also showed the new domain serving the updated Chinese homepage. The old blog at `https://joeyddong.top` still returned HTTPS 200 with title `JoeyDDong's Blog`; its configuration was not changed.
+
+Blog, Projects, and Photography still require their own future implementation and deployment before their prepared subdomain links will serve pages.
 
 ## Recovery
 
