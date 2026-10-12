@@ -16,15 +16,15 @@
 
 | 栏目 | 用途 | 管理方式 | 预定网址 |
 | --- | --- | --- | --- |
-| Home | 网站主页与各栏目入口 | 当前主站仓库 | `https://joeyddong.top` |
-| Blog | 文章、编程笔记与学习记录 | 已有独立 Hexo 仓库 | `https://blog.joeyddong.top` |
-| Projects | Coding、Vibe Coding、Data Science 等个人项目 | 后续独立仓库 | `https://projects.joeyddong.top` |
-| Photography | 个人摄影作品 | 后续独立仓库 | `https://photography.joeyddong.top` |
-| Portfolio | 个人简介与精选经历 | 当前主站仓库 | `https://joeyddong.top/portfolio/` |
+| Home | 网站主页与各栏目入口 | 当前主站仓库 | `https://joeyddong-site.top` |
+| Blog | 新博客 | 新独立项目，尚未部署 | `https://blog.joeyddong-site.top` |
+| Projects | Coding、Vibe Coding、Data Science 等个人项目 | 后续独立仓库 | `https://projects.joeyddong-site.top` |
+| Photography | 个人摄影作品 | 后续独立仓库 | `https://photography.joeyddong-site.top` |
+| Portfolio | 个人简介与精选经历 | 当前主站仓库 | `https://joeyddong-site.top/portfolio/` |
 
 - 主站仓库：[weiweiweidong/joeyddong_homepage](https://github.com/weiweiweidong/joeyddong_homepage)。
 - Blog 仓库：[weiweiweidong/My_Hexo_Blog_Source](https://github.com/weiweiweidong/My_Hexo_Blog_Source)。
-- 当前 `www.joeyddong.top` 承载已有 Blog；迁移到 Blog 子域名的工作尚未实施。
+- 用户最新要求：新主页及新的 Blog、Projects、Photography 均使用 `joeyddong-site.top` 及对应子域名。旧博客 `joeyddong.top` 维持现状，不修改内容、托管域名或 DNS；新的 Blog 不迁移旧博客。
 - 当前仓库负责 Home、Portfolio，以及后续需要的其他主站静态页面。
 - 四个网站分别维护仓库，统一品牌、五项导航与基础视觉；具体内容布局可以不同。
 
@@ -117,25 +117,27 @@ Blog、Projects 和 Photography 尚未接入这套语言规则，因此目前不
 | `src/styles/global.css` | 共享配色、字体、间距与响应式布局 |
 | `public/` | 本地图片与网站图标 |
 
-子站地址可通过 `.env` 中的 `PUBLIC_BLOG_URL`、`PUBLIC_PROJECTS_URL`、`PUBLIC_PHOTOGRAPHY_URL` 覆盖，示例见 `.env.example`。过渡期间可将 Blog 链接指向现有的 `https://www.joeyddong.top`。
+子站地址可通过 `.env` 中的 `PUBLIC_BLOG_URL`、`PUBLIC_PROJECTS_URL`、`PUBLIC_PHOTOGRAPHY_URL` 覆盖，示例见 `.env.example`。新 Blog 链接默认为 `https://blog.joeyddong-site.top`。
 
 ## 7. 当前进度与后续事项
 
 主站主页基础版已完成，包括共享 Header / Footer / Layout、三语 Home、基础 Portfolio、语言切换与记忆、手机导航和基础页面元信息。已通过 Astro 检查与静态构建，并检查了桌面、手机布局及主要交互。
 
-当前子站入口使用预定子域名。其他子站尚未在本次工作中创建或部署，已有 Hexo Blog 也尚未进行视觉和多语言适配。
+生产构建环境使用 `PUBLIC_BLOG_URL=https://blog.joeyddong-site.top`，指向新 Blog 的预定地址。新的 Blog、Projects 与 Photography 尚未创建或部署独立站点，本次只准备新域名下的入口。已有 Hexo Blog 保持不变。
 
 后续事项：
 
 1. 根据主页预览反馈调整细节，确定正式肖像。
 2. 补充经过用户确认的 Portfolio 内容。
 3. 分别建设 Projects 与 Photography 子项目，确定内容和布局。
-4. 适配已有 Hexo Blog，并统一四站导航、视觉和语言规则。
-5. 确认部署和域名迁移方案后，再进行正式发布。
+4. 建设新的 Blog，并统一新四站导航、视觉和语言规则；保持旧博客独立。
+5. 各新子站部署完成后，添加对应子域名的 DNS 与托管绑定。
 
-当前已连接 GitHub 与 Cloudflare Workers，生产分支为 `main`。仓库通过 `wrangler.jsonc` 指定部署 `dist/`，执行 `npx wrangler deploy` 时先自动运行 `pnpm build`，避免全新构建环境缺少输出目录；Cloudflare 控制台的构建命令可以留空。构建环境使用 Node.js 24.19.0 和 pnpm 11.25.0。公网部署是否成功以 Cloudflare 返回结果为准，域名在阿里云管理；正式域名与 Blog 迁移仍待完成。
+当前已连接 GitHub 与 Cloudflare Workers，生产分支为 `main`。仓库通过 `wrangler.jsonc` 指定部署 `dist/`，执行 `npx wrangler deploy` 时先自动运行 `pnpm build`，避免全新构建环境缺少输出目录；Cloudflare 控制台的构建命令可以留空。构建环境使用 Node.js 24.19.0 和 pnpm 11.25.0。2026-10-12 已按用户最新要求完成域名对调：新首页使用 `www.joeyddong.top`，旧博客使用 `joeyddong.top`。域名在阿里云管理和续费，DNS 由 Cloudflare 托管。自动构建仍出现 Cloudflare API 超时，已通过控制台直接上传并成功发布，版本 `1c28c102` 为就绪。六个主站页面通过 Cloudflare 端点 HTTPS 验证，旧博客正常 HTTPS 可访问；本地 DNS 缓存仍可能产生 www 的旧跳转，详情与回滚步骤见 `docs/DOMAIN_MIGRATION.md`。
 
 ## 8. 后续开发原则
+
+最新域名安排和接入进度以 `docs/NEW_DOMAIN_SETUP.md` 为准，上一节对调旧域名的部署记录作为历史保留。
 
 - 优先静态化、可读性与可维护性，使用语义化 HTML，兼顾桌面和手机。
 - 各站统一基础视觉，同时允许内容采用合适的独立布局。

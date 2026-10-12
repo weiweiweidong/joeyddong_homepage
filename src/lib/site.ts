@@ -2,13 +2,13 @@ import { pagePath, type Locale } from './i18n';
 
 export const site = {
   name: 'JoeyDDong',
-  url: 'https://www.joeyddong.top',
+  url: 'https://joeyddong-site.top',
   github: 'https://github.com/weiweiweidong',
   portrait: '/images/portrait-placeholder.jpg',
   destinations: {
-    blog: import.meta.env.PUBLIC_BLOG_URL || 'https://joeyddong.top',
-    projects: import.meta.env.PUBLIC_PROJECTS_URL || 'https://projects.joeyddong.top',
-    photography: import.meta.env.PUBLIC_PHOTOGRAPHY_URL || 'https://photography.joeyddong.top',
+    blog: import.meta.env.PUBLIC_BLOG_URL || 'https://blog.joeyddong-site.top',
+    projects: import.meta.env.PUBLIC_PROJECTS_URL || 'https://projects.joeyddong-site.top',
+    photography: import.meta.env.PUBLIC_PHOTOGRAPHY_URL || 'https://photography.joeyddong-site.top',
   },
 };
 

@@ -18,7 +18,7 @@ export function readLocale(): Locale | undefined {
 export function rememberLocale(locale: Locale) {
   try { localStorage.setItem(preferenceKey, locale); } catch { /* Cookies and explicit routes remain available. */ }
   const hostname = window.location.hostname;
-  const sharedDomain = hostname === 'joeyddong.top' || hostname.endsWith('.joeyddong.top') ? '; Domain=joeyddong.top' : '';
+  const sharedDomain = hostname === 'joeyddong-site.top' || hostname.endsWith('.joeyddong-site.top') ? '; Domain=joeyddong-site.top' : '';
   const secure = window.location.protocol === 'https:' ? '; Secure' : '';
   document.cookie = `${preferenceKey}=${locale}; Path=/; Max-Age=31536000; SameSite=Lax${sharedDomain}${secure}`;
 }
