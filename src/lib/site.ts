@@ -2,7 +2,7 @@ import { pagePath, type Locale } from './i18n';
 
 export const site = {
   name: 'JoeyDDong',
-  url: 'https://joeyddong-site.top',
+  url: 'https://joeyddong.top',
   github: 'https://github.com/weiweiweidong',
   portrait: '/images/portfolio-portrait.jpg',
   destinations: {

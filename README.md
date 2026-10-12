@@ -21,7 +21,7 @@ npm run build
 npm run preview
 ```
 
-The production output is `dist/`. The homepage's primary domain is `https://joeyddong-site.top` on Cloudflare Workers. The existing Blog stays at `https://joeyddong.top` on GitHub Pages and is not migrated. A separate new Blog, Projects, and Photography site are planned under the new domain.
+The production output is `dist/`. The homepage's primary domain is `https://joeyddong.top` on Cloudflare Workers. `www.joeyddong.top` and `joeyddong-site.top` redirect to the primary domain with HTTP 301, preserving paths and query parameters. The old GitHub Pages blog is offline; its repository is retained. The separate new Blog continues at `https://blog.joeyddong-site.top`.
 
 ## Cloudflare Workers deployment
 
@@ -29,7 +29,7 @@ The production branch is `main`. Set the deployment command to `npx wrangler dep
 
 Use Node.js 24.19.0 and npm 11.19.0 in the build environment. To check the deployment flow locally without publishing, run `npx wrangler deploy --dry-run`.
 
-The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.joeyddong-site.top`; it is consumed during Astro's static build, not at runtime. Custom domains are managed in the Cloudflare dashboard. Domain registration stays at Alibaba Cloud, with DNS hosted by Cloudflare. Current setup and verification are recorded in `docs/NEW_DOMAIN_SETUP.md`; the earlier domain changes and rollback records are in `docs/DOMAIN_MIGRATION.md`.
+The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.joeyddong-site.top`; it is consumed during Astro's static build, not at runtime. Custom domains are declared in `wrangler.jsonc`. `src/worker.js` redirects the two aliases and otherwise serves the `ASSETS` binding. Domain registration stays at Alibaba Cloud, with DNS hosted by Cloudflare. Current setup and verification are recorded in `docs/PRIMARY_DOMAIN_SWITCH.md`; earlier domain changes are historical records in `docs/NEW_DOMAIN_SETUP.md` and `docs/DOMAIN_MIGRATION.md`.
 
 ## Pages and languages
 
@@ -43,14 +43,14 @@ The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.jo
 - On an unprefixed URL, choose the saved language, then the first supported browser language, then English.
 - An explicit localized URL is respected. `?lang=en`, `?lang=zh`, and `?lang=ja` can select a language when arriving from another subsite.
 - A language dropdown in the top-right header stays on the equivalent Home, Portfolio, Photography, or Projects page and remembers the choice.
-- The `joey_locale` cookie is scoped to `joeyddong-site.top` on that domain and its subdomains; the browser's local storage is an additional fallback.
+- The `joey_locale` cookie is scoped to `joeyddong.top` on that domain and its subdomains; the browser's local storage is an additional fallback. The separate Blog receives the language through the `lang` query parameter.
 - Without JavaScript, every language page and the language links still work. Automatic language selection requires JavaScript.
 
 ## Subsites
 
 Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects currently opens a local static placeholder showing “Work in progress” in the selected language. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
 
-Blog defaults to `blog.joeyddong-site.top`. Projects and Photography always open localized `/projects/` and `/photography/` pages within this site. Their links are not overridden by environment variables, so old build settings cannot send visitors to unlaunched subsites. The existing Blog at `joeyddong.top` remains separate. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
+Blog defaults to `blog.joeyddong-site.top`. Projects and Photography always open localized `/projects/` and `/photography/` pages within this site. Their links are not overridden by environment variables. The old GitHub Pages blog has been retired. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
 
 Copy `.env.example` to `.env` to point links to other local development servers. Each receiving subsite must adopt the same language preference convention when it is integrated.
 

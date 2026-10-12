@@ -1,6 +1,8 @@
 # JoeyDDong 个人网站项目上下文
 
-更新日期：2026-10-12
+更新日期：2026-10-13
+
+2026-10-13 域名切换：新个人网站主域名改为 `https://joeyddong.top`，`www.joeyddong.top` 与 `joeyddong-site.top` 301 跳转到主域名。旧 GitHub Pages 博客已关闭发布，保留源码。独立新博客 `https://blog.joeyddong-site.top` 保留。此决策替代下文历史域名规划，验收见 [docs/PRIMARY_DOMAIN_SWITCH.md](docs/PRIMARY_DOMAIN_SWITCH.md)。
 
 本文记录当前有效的需求、已确认的设计方向和实现状态。后续讨论与开发以此为基础；新的用户决策优先于本文。启动和维护细节见 [README.md](README.md)。
 
@@ -16,15 +18,15 @@
 
 | 栏目 | 用途 | 管理方式 | 预定网址 |
 | --- | --- | --- | --- |
-| Home | 网站主页与各栏目入口 | 当前主站仓库 | `https://joeyddong-site.top` |
+| Home | 网站主页与各栏目入口 | 当前主站仓库 | `https://joeyddong.top` |
 | Blog | 新博客 | 新独立项目，尚未部署 | `https://blog.joeyddong-site.top` |
 | Projects | Coding、Vibe Coding、Data Science 等个人项目 | 后续独立仓库 | `https://projects.joeyddong-site.top` |
 | Photography | 个人摄影作品 | 后续独立仓库 | `https://photography.joeyddong-site.top` |
-| Portfolio | 个人简介与精选经历 | 当前主站仓库 | `https://joeyddong-site.top/portfolio/` |
+| Portfolio | 个人简介与精选经历 | 当前主站仓库 | `https://joeyddong.top/portfolio/` |
 
 - 主站仓库：[weiweiweidong/joeyddong_homepage](https://github.com/weiweiweidong/joeyddong_homepage)。
 - Blog 仓库：[weiweiweidong/My_Hexo_Blog_Source](https://github.com/weiweiweidong/My_Hexo_Blog_Source)。
-- 用户最新要求：新主页及新的 Blog、Projects、Photography 均使用 `joeyddong-site.top` 及对应子域名。旧博客 `joeyddong.top` 维持现状，不修改内容、托管域名或 DNS；新的 Blog 不迁移旧博客。
+- 用户最新要求：新主页使用 `joeyddong.top`；旧 GitHub Pages 博客下线。独立新博客保留 `blog.joeyddong-site.top`，Projects、Photography 使用主站本地路由。
 - 当前仓库负责 Home、Portfolio，以及后续需要的其他主站静态页面。
 - 四个网站分别维护仓库，统一品牌、五项导航与基础视觉；具体内容布局可以不同。
 
