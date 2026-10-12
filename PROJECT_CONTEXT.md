@@ -133,7 +133,7 @@ Blog、Projects 和 Photography 尚未接入这套语言规则，因此目前不
 4. 适配已有 Hexo Blog，并统一四站导航、视觉和语言规则。
 5. 确认部署和域名迁移方案后，再进行正式发布。
 
-原有部署方向为 Cloudflare，域名在阿里云管理；具体 DNS、托管与重定向配置留待部署阶段确认。本次主站实现未部署到公网，也未修改现有域名和 Blog。
+当前已连接 GitHub 与 Cloudflare Workers，生产分支为 `main`。仓库通过 `wrangler.jsonc` 指定部署 `dist/`，执行 `npx wrangler deploy` 时先自动运行 `pnpm build`，避免全新构建环境缺少输出目录；Cloudflare 控制台的构建命令可以留空。构建环境使用 Node.js 24.19.0 和 pnpm 11.25.0。公网部署是否成功以 Cloudflare 返回结果为准，域名在阿里云管理；正式域名与 Blog 迁移仍待完成。
 
 ## 8. 后续开发原则
 

@@ -21,7 +21,13 @@ pnpm build
 pnpm preview
 ```
 
-The production output is `dist/`. This change does not deploy the site or change the current domain's Blog.
+The production output is `dist/`. Deploy it with the Cloudflare workflow below; custom-domain setup and migration of the existing Blog are separate steps.
+
+## Cloudflare Workers deployment
+
+The production branch is `main`. Set the deployment command to `npx wrangler deploy` and use the repository root. `wrangler.jsonc` runs `pnpm build` before packaging the static files in `dist/`, so the dashboard build command can be left empty. This also builds a fresh checkout where `dist/` does not yet exist.
+
+Use Node.js 24.19.0 and pnpm 11.25.0 in the build environment. To check the deployment flow locally without publishing, run `npx wrangler deploy --dry-run`.
 
 ## Pages and languages
 
