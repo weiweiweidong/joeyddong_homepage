@@ -2,7 +2,7 @@
 
 更新日期：2026-10-13
 
-2026-10-13 域名切换：新个人网站主域名改为 `https://joeyddong.top`，`www.joeyddong.top` 与 `joeyddong-site.top` 301 跳转到主域名。旧 GitHub Pages 博客已关闭发布，保留源码。独立新博客目标地址改为 `https://blog.joeyddong.top`；当前仓库入口已更新，线上构建变量与博客域名绑定仍需同步。此决策替代下文历史域名规划，验收见 [docs/PRIMARY_DOMAIN_SWITCH.md](docs/PRIMARY_DOMAIN_SWITCH.md)。
+2026-10-13 域名切换：新个人网站主域名改为 `https://joeyddong.top`，`www.joeyddong.top` 与 `joeyddong-site.top` 301 跳转到主域名。旧 GitHub Pages 博客已关闭发布，保留源码。独立新博客目标地址改为 `https://blog.joeyddong.top`；当前仓库入口与 Cloudflare 生产构建变量已同步，主站已部署；新博客域名已验证 HTTPS 200。此决策替代下文历史域名规划，验收见 [docs/PRIMARY_DOMAIN_SWITCH.md](docs/PRIMARY_DOMAIN_SWITCH.md)。
 
 本文记录当前有效的需求、已确认的设计方向和实现状态。后续讨论与开发以此为基础；新的用户决策优先于本文。启动和维护细节见 [README.md](README.md)。
 
@@ -127,7 +127,7 @@ Blog 地址可通过 `.env` 中的 `PUBLIC_BLOG_URL` 覆盖，示例见 `.env.ex
 
 主站主页基础版已完成，包括共享 Header / Footer / Layout、三语 Home、基础 Portfolio、语言切换与记忆、手机导航和基础页面元信息。已通过 Astro 检查与静态构建，并检查了桌面、手机布局及主要交互。
 
-生产构建环境需同步为 `PUBLIC_BLOG_URL=https://blog.joeyddong.top`，避免旧变量覆盖源码默认地址。此次已修改主站仓库的 Blog 入口和环境变量示例；线上构建变量、独立 Blog 的站点 URL、DNS 与托管域名绑定尚未在此次修改中更新。Projects 与 Photography 当前使用主站本地路由。
+生产构建环境已同步为 `PUBLIC_BLOG_URL=https://blog.joeyddong.top`。主站已通过 Wrangler 发布，十二个三语页面的新 Blog 链接与 canonical 均验证通过，两个旧主站域名仍正常 301 跳转。Cloudflare 自动构建命令已移除旧 `pnpm build`，由 `npx wrangler deploy` 调用仓库中的 `npm run build`。新博客域名已验证 HTTPS 200；独立 Blog 源码未在本次修改中调整。Projects 与 Photography 当前使用主站本地路由。
 
 后续事项：
 
