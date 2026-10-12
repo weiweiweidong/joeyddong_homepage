@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { messages, pagePath, type Locale } from '../lib/i18n';
+import { site, destinationUrl } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = messages[locale].portfolio;
+---
+
+<BaseLayout locale={locale} page="portfolio" title={`${site.name} — ${messages[locale].navigation.portfolio}`} description={copy.introduction}>
+  <main id="main-content" class="shell portfolio-main">
+    <section class="portfolio-hero" aria-labelledby="portfolio-title">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1 id="portfolio-title">{copy.title}</h1>
+      <div class="hero-intro"><p>{copy.tagline}</p></div>
+    </section>
+    <div class="portfolio-content section-space">
+      <p class="portfolio-introduction">{copy.introduction}</p>
+      <section aria-labelledby="interests-title"><h2 id="interests-title">{copy.interestsTitle}</h2><ul class="interest-list">{copy.interests.map((interest) => <li>{interest}</li>)}</ul></section>
+      <section aria-labelledby="work-title"><h2 id="work-title">{copy.workTitle}</h2><div class="portfolio-links"><a class="text-link" href={site.github}>{copy.githubLabel} ↗</a><a class="text-link" href={destinationUrl('blog', locale)}>{copy.blogLabel} ↗</a></div></section>
+      <a class="back-link" href={pagePath(locale)}>← {copy.back}</a>
+    </div>
+  </main>
+</BaseLayout>

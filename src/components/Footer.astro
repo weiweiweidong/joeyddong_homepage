@@ -1,0 +1,14 @@
+---
+import { messages, type Locale } from '../lib/i18n';
+import { site } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+
+<footer class="site-footer shell">
+  <div class="footer-inner">
+    <div><p class="footer-name">{site.name}<span>.</span></p><p class="footer-note">{messages[locale].footer.note}</p></div>
+    <div class="footer-links"><a href={site.github}>GitHub ↗</a><a href="#top">{messages[locale].footer.top} ↑</a></div>
+    <small>© {new Date().getFullYear()} {site.name}</small>
+  </div>
+</footer>

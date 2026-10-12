@@ -1,0 +1,52 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { messages, locales, htmlLanguages, pagePath, type Locale, type Page } from '../lib/i18n';
+import { site } from '../lib/site';
+import '../styles/global.css';
+interface Props { locale: Locale; page: Page | 'notFound'; title: string; description: string }
+const { locale, page, title, description } = Astro.props;
+const canonical = new URL(pagePath(locale, page === 'portfolio' ? 'portfolio' : 'home'), site.url);
+---
+
+<!doctype html>
+<html lang={htmlLanguages[locale]} data-locale={locale} data-page={page}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#cc4942" />
+    <meta name="color-scheme" content="light" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {page !== 'notFound' && <link rel="canonical" href={canonical} />}
+    {page === 'notFound' ? <meta name="robots" content="noindex" /> : locales.map((language) => (
+      <link rel="alternate" hreflang={htmlLanguages[language]} href={new URL(pagePath(language, page), site.url)} />
+    ))}
+    {page !== 'notFound' && <link rel="alternate" hreflang="x-default" href={new URL(pagePath('en', page), site.url)} />}
+    <script>
+      import { isLocale, rememberLocale, readLocale, browserLocale } from '../lib/locale-preference';
+      import { pagePath } from '../lib/i18n';
+      const current = document.documentElement.dataset.locale;
+      const page = document.documentElement.dataset.page;
+      const url = new URL(window.location.href);
+      const requested = url.searchParams.get('lang');
+      if ((page === 'home' || page === 'portfolio') && isLocale(current)) {
+        // An explicit localized URL wins; unprefixed pages use the saved/browser choice.
+        const preferred = isLocale(requested) ? requested : current !== 'en' ? current : readLocale() ?? browserLocale();
+        rememberLocale(preferred);
+        if (preferred !== current) {
+          url.pathname = pagePath(preferred, page);
+          url.searchParams.delete('lang');
+          window.location.replace(url.toString());
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{messages[locale].skip}</a>
+    <Header locale={locale} page={page} />
+    <slot />
+    <Footer locale={locale} />
+  </body>
+</html>
