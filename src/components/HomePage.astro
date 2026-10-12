@@ -8,6 +8,11 @@ const copy = messages[locale];
 ---
 
 <BaseLayout locale={locale} page="home" title={`${site.name} — Ideas, Work & Life`} description={copy.home.aboutDescription}>
+  <div class="home-background" aria-hidden="true">
+    <span class="home-background__circle"></span>
+    <span class="home-background__panel"></span>
+    <span class="home-background__ring"></span>
+  </div>
   <main id="main-content" class="home-main">
     <section class="hero shell" aria-labelledby="home-title">
       <div class="hero-content">
@@ -15,6 +20,7 @@ const copy = messages[locale];
         <p class="hero-description">{copy.home.tagline}</p>
       </div>
       <a class="scroll-cue" href="#explore-title" aria-label={copy.home.exploreEyebrow}><span aria-hidden="true">↓</span></a>
+      <button class="background-motion-toggle" type="button" aria-label={copy.home.motionLabel} aria-pressed="false" data-play-label={copy.home.motionPlay} data-pause-label={copy.home.motionPause} hidden>{copy.home.motionPlay}</button>
     </section>
 
     <section class="explore content-shell section-space" aria-labelledby="explore-title">
@@ -52,3 +58,26 @@ const copy = messages[locale];
     </section>
   </main>
 </BaseLayout>
+
+<script>
+  const background = document.querySelector<HTMLElement>('.home-background');
+  const motionToggle = document.querySelector<HTMLButtonElement>('.background-motion-toggle');
+  if (background && motionToggle) {
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let manuallySelected = false;
+    const setMotion = (enabled: boolean) => {
+      background.dataset.motion = enabled ? 'on' : 'off';
+      motionToggle.setAttribute('aria-pressed', String(enabled));
+      motionToggle.textContent = (enabled ? motionToggle.dataset.pauseLabel : motionToggle.dataset.playLabel) ?? '';
+    };
+    setMotion(!preference.matches);
+    motionToggle.hidden = false;
+    motionToggle.addEventListener('click', () => {
+      manuallySelected = true;
+      setMotion(background.dataset.motion !== 'on');
+    });
+    preference.addEventListener('change', (event) => {
+      if (!manuallySelected) setMotion(!event.matches);
+    });
+  }
+</script>

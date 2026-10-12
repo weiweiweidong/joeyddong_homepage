@@ -15,6 +15,9 @@ const en = {
   navigation: { home: 'Home', blog: 'Blog', projects: 'Projects', photography: 'Photography', portfolio: 'Portfolio' },
   home: {
     greeting: 'I’m JoeyDDong.',
+    motionLabel: 'Background animation',
+    motionPlay: 'Play motion',
+    motionPause: 'Pause motion',
     headline: 'Writing code. Capturing life.',
     tagline: 'My projects, learning notes, and everyday moments through my lens.',
     portraitCaption: 'Temporary portrait',
@@ -60,6 +63,9 @@ export const messages = {
     navigation: { home: '首页', blog: '博客', projects: '项目', photography: '摄影', portfolio: '关于我' },
     home: {
       greeting: '我是 JoeyDDong。',
+      motionLabel: '背景动画',
+      motionPlay: '播放动画',
+      motionPause: '暂停动画',
       headline: '写代码，也记录生活。',
       tagline: '这里有我的项目、学习笔记，以及镜头里的日常。',
       portraitCaption: '临时肖像示意',
@@ -102,6 +108,9 @@ export const messages = {
     navigation: { home: 'ホーム', blog: 'ブログ', projects: 'プロジェクト', photography: '写真', portfolio: '自己紹介' },
     home: {
       greeting: 'JoeyDDong です。',
+      motionLabel: '背景アニメーション',
+      motionPlay: '再生',
+      motionPause: '停止',
       headline: 'コードを書き、日々を記録する。',
       tagline: '自分のプロジェクト、学びのメモ、そして写真に残した日常を紹介します。',
       portraitCaption: '仮のポートレート',
