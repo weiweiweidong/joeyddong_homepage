@@ -2,7 +2,7 @@
   "name": "joeyddong-homepage",
   "compatibility_date": "2026-10-12",
   "build": {
-    "command": "pnpm build"
+    "command": "npm run build"
   },
   "assets": {
     "directory": "./dist"

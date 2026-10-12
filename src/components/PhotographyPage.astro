@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { type Locale } from '../lib/i18n';
+import { photos, photography, photoPreview } from '../lib/photography';
+import { site } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = photography[locale];
+---
+
+<BaseLayout locale={locale} page="photography" title={`${site.name} — Photography`} description={copy.description}>
+  <main id="main-content" class="shell photography-main">
+    <section class="photography-hero" aria-labelledby="photography-title">
+      <div class="photography-intro">
+        <h1 id="photography-title">{locale === 'zh' ? <><span>把我眼中的世界，</span><span>分享给你。</span></> : copy.title}</h1>
+        <p class="photography-welcome">{copy.welcome}</p>
+        <p class="photography-description">{copy.intro}</p>
+        <p class="photography-note">{copy.note}</p>
+        <p class="photography-invitation"><strong>{copy.invitation}</strong></p>
+      </div>
+      <div class="photography-cover">
+        <div class="photography-cover-frame photography-cover-frame-back" aria-hidden="true">
+          <img src={photoPreview(photos[2].url, 640)} width="3753" height="7922" alt="" decoding="async" />
+        </div>
+        <div class="photography-cover-frame">
+          <img src={photoPreview(photos[0].url, 640)} width="3054" height="6447" alt={`${copy.photo} 01`} fetchpriority="high" />
+        </div>
+      </div>
+    </section>
+    <section class="photography-collection" id="photographs" aria-labelledby="collection-title">
+      <div class="photography-collection-heading">
+        <h2 id="collection-title">{copy.collection}</h2>
+      </div>
+      <div class="photo-grid">
+        {photos.map((photo) => (
+          <figure class="photo-item">
+            <a class="photo-link" href={photo.url} data-photo-id={photo.id} aria-label={`${copy.view} ${photo.id}`}>
+              <img src={photoPreview(photo.url, 640)} srcset={`${photoPreview(photo.url, 320)} 320w, ${photoPreview(photo.url, 640)} 640w, ${photoPreview(photo.url, 960)} 960w`} sizes="(max-width: 480px) calc(100vw - 48px), (max-width: 700px) 44vw, (max-width: 1000px) 28vw, 22vw" alt={`${copy.photo} ${String(photo.id).padStart(2, '0')}`} width="900" height="1900" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+        ))}
+      </div>
+    </section>
+    <div class="photography-outro"><p>{copy.quote}</p></div>
+  </main>
+  <dialog class="photo-viewer" aria-label={copy.view}>
+    <img class="photo-viewer-ambient" alt="" aria-hidden="true" />
+    <div class="photo-viewer-toolbar">
+      <div class="photo-viewer-heading"><span>Photography</span><p class="photo-viewer-count" aria-live="polite"></p></div>
+      <button type="button" class="photo-viewer-close" aria-label={copy.close}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+    </div>
+    <div class="photo-viewer-stage">
+      <button type="button" class="photo-viewer-previous" aria-label={copy.previous}><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
+      <div class="photo-carousel">
+        <div class="photo-carousel-track">
+          <img class="photo-viewer-image" alt="" aria-hidden="true" draggable="false" />
+          <img class="photo-viewer-image" alt="" draggable="false" />
+          <img class="photo-viewer-image" alt="" aria-hidden="true" draggable="false" />
+        </div>
+      </div>
+      <button type="button" class="photo-viewer-next" aria-label={copy.next}><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg></button>
+    </div>
+    <div class="photo-viewer-footer">
+      <div class="photo-filmstrip" role="group" aria-label={copy.collection}>
+        {Array.from({ length: 7 }, () => <button type="button" class="photo-thumbnail"><img alt="" draggable="false" /></button>)}
+      </div>
+      <a class="photo-viewer-original" target="_blank" rel="noopener noreferrer">{copy.original} ↗</a>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script>
+  const viewer = document.querySelector<HTMLDialogElement>('.photo-viewer');
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.photo-link'));
+  const carousel = viewer?.querySelector<HTMLElement>('.photo-carousel');
+  const track = viewer?.querySelector<HTMLElement>('.photo-carousel-track');
+  const images = Array.from(viewer?.querySelectorAll<HTMLImageElement>('.photo-viewer-image') ?? []);
+  let transition: Animation | undefined;
+  const counter = viewer?.querySelector<HTMLElement>('.photo-viewer-count');
+  const original = viewer?.querySelector<HTMLAnchorElement>('.photo-viewer-original');
+  const ambient = viewer?.querySelector<HTMLImageElement>('.photo-viewer-ambient');
+  const thumbnails = Array.from(viewer?.querySelectorAll<HTMLButtonElement>('.photo-thumbnail') ?? []);
+  let current = 0;
+  let opener: HTMLAnchorElement | undefined;
+  const show = (index: number) => {
+    current = (index + links.length) % links.length;
+    const link = links[current];
+    if (!counter || !original || !link) return;
+    images.forEach((image, slot) => {
+      const slide = links[(current + slot - 1 + links.length) % links.length];
+      image.src = `${slide.href}?x-oss-process=image/resize,w_1600/format,webp`;
+      image.alt = slot === 1 ? slide.querySelector('img')?.alt ?? '' : '';
+    });
+    counter.textContent = `${String(current + 1).padStart(2, '0')} / ${links.length}`;
+    original.href = link.href;
+    if (ambient) ambient.src = `${link.href}?x-oss-process=image/resize,w_320/format,webp`;
+    thumbnails.forEach((button, slot) => {
+      const index = (current + slot - 3 + links.length) % links.length;
+      const slide = links[index];
+      button.dataset.index = String(index);
+      button.setAttribute('aria-label', slide.getAttribute('aria-label') ?? '');
+      button.setAttribute('aria-current', slot === 3 ? 'true' : 'false');
+      const thumb = button.querySelector('img');
+      if (thumb) thumb.src = `${slide.href}?x-oss-process=image/resize,w_112/format,webp`;
+    });
+  };
+  const move = (direction: number) => {
+    if (!viewer?.open || !track || transition) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      show(current + direction);
+      return;
+    }
+    transition = track.animate([
+      { transform: 'translateX(-100%)' },
+      { transform: `translateX(${direction > 0 ? '-200%' : '0%'})` },
+    ], { duration: 360, easing: 'cubic-bezier(.22,.68,0,1)', fill: 'forwards' });
+    const active = transition;
+    active.finished.then(() => {
+      show(current + direction);
+      active.cancel();
+      transition = undefined;
+    }, () => {});
+  };
+  thumbnails.forEach((button) => button.addEventListener('click', () => {
+    transition?.cancel();
+    transition = undefined;
+    show(Number(button.dataset.index));
+  }));
+  let touchStart: { x: number; y: number } | undefined;
+  carousel?.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse') return;
+    touchStart = { x: event.clientX, y: event.clientY };
+    carousel.setPointerCapture(event.pointerId);
+  });
+  carousel?.addEventListener('pointerup', (event) => {
+    if (!touchStart) return;
+    const dx = event.clientX - touchStart.x;
+    const dy = event.clientY - touchStart.y;
+    touchStart = undefined;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) move(dx < 0 ? 1 : -1);
+  });
+  carousel?.addEventListener('pointercancel', () => { touchStart = undefined; });
+  links.forEach((link, index) => link.addEventListener('click', (event) => {
+    if (!viewer || typeof viewer.showModal !== 'function' || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    opener = link;
+    show(index);
+    viewer.showModal();
+    document.body.classList.add('photo-viewer-open');
+  }));
+  viewer?.querySelector('.photo-viewer-close')?.addEventListener('click', () => viewer.close());
+  viewer?.querySelector('.photo-viewer-previous')?.addEventListener('click', () => move(-1));
+  viewer?.querySelector('.photo-viewer-next')?.addEventListener('click', () => move(1));
+  viewer?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      move(event.key === 'ArrowLeft' ? -1 : 1);
+    }
+  });
+  viewer?.addEventListener('click', (event) => { if (event.target === viewer) viewer.close(); });
+  viewer?.addEventListener('close', () => {
+    document.body.classList.remove('photo-viewer-open');
+    transition?.cancel();
+    transition = undefined;
+    touchStart = undefined;
+    images.forEach((image) => image.removeAttribute('src'));
+    ambient?.removeAttribute('src');
+    opener?.focus({ preventScroll: true });
+  });
+</script>

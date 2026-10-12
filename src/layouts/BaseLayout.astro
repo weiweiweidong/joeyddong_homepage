@@ -1,16 +1,17 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import AnimatedBackground from '../components/AnimatedBackground.astro';
 import { messages, locales, htmlLanguages, pagePath, type Locale, type Page } from '../lib/i18n';
 import { site } from '../lib/site';
 import '../styles/global.css';
 interface Props { locale: Locale; page: Page | 'notFound'; title: string; description: string }
 const { locale, page, title, description } = Astro.props;
-const canonical = new URL(pagePath(locale, page === 'portfolio' ? 'portfolio' : 'home'), site.url);
+const canonical = new URL(pagePath(locale, page === 'notFound' ? 'home' : page), site.url);
 ---
 
 <!doctype html>
-<html lang={htmlLanguages[locale]} data-locale={locale} data-page={page}>
+<html lang={htmlLanguages[locale]} data-locale={locale} data-page={page} data-animated-background={page !== 'notFound' ? 'true' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,7 +32,7 @@ const canonical = new URL(pagePath(locale, page === 'portfolio' ? 'portfolio' : 
       const page = document.documentElement.dataset.page;
       const url = new URL(window.location.href);
       const requested = url.searchParams.get('lang');
-      if ((page === 'home' || page === 'portfolio') && isLocale(current)) {
+      if ((page === 'home' || page === 'portfolio' || page === 'photography' || page === 'projects') && isLocale(current)) {
         // An explicit localized URL wins; unprefixed pages use the saved/browser choice.
         const preferred = isLocale(requested) ? requested : current !== 'en' ? current : readLocale() ?? browserLocale();
         rememberLocale(preferred);
@@ -44,6 +45,7 @@ const canonical = new URL(pagePath(locale, page === 'portfolio' ? 'portfolio' : 
     </script>
   </head>
   <body>
+    {page !== 'notFound' && <AnimatedBackground />}
     <a class="skip-link" href="#main-content">{messages[locale].skip}</a>
     <Header locale={locale} page={page} />
     <slot />

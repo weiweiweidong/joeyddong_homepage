@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { messages, pagePath, type Locale } from '../lib/i18n';
+import { site } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = messages[locale];
+---
+
+<BaseLayout locale={locale} page="projects" title={`${copy.navigation.projects} — ${site.name}`} description={copy.projects.status}>
+  <main class="projects-placeholder shell" id="main-content">
+    <p class="eyebrow">{copy.navigation.projects}</p>
+    <h1>{copy.projects.status}</h1>
+    <a class="back-link" href={pagePath(locale)}>{copy.projects.back} <span aria-hidden="true">↗</span></a>
+  </main>
+</BaseLayout>
+
+<style>
+  .projects-placeholder { min-height: 65svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-block: 80px; text-align: center; }
+  h1 { margin-top: 24px; font-size: clamp(40px, 7vw, 88px); line-height: 1.2; letter-spacing: -.04em; text-wrap: balance; }
+  .back-link { gap: 12px; margin-top: 40px; }
+</style>

@@ -6,28 +6,28 @@ The visual direction is inspired by Kickpush: a coral-red canvas, oversized whit
 
 ## Run locally
 
-Use Node.js **22.12 or newer** (Node 24 is recommended) and pnpm.
+Use Node.js **22.12 or newer** (Node 24 is recommended) and npm.
 
 ```sh
-pnpm install
-pnpm dev
+npm ci
+npm run dev
 ```
 
 Open the Local URL printed by Astro, normally `http://127.0.0.1:4321`.
 
 ```sh
-pnpm check
-pnpm build
-pnpm preview
+npm run check
+npm run build
+npm run preview
 ```
 
 The production output is `dist/`. The homepage's primary domain is `https://joeyddong-site.top` on Cloudflare Workers. The existing Blog stays at `https://joeyddong.top` on GitHub Pages and is not migrated. A separate new Blog, Projects, and Photography site are planned under the new domain.
 
 ## Cloudflare Workers deployment
 
-The production branch is `main`. Set the deployment command to `npx wrangler deploy` and use the repository root. `wrangler.jsonc` runs `pnpm build` before packaging the static files in `dist/`, so the dashboard build command can be left empty. This also builds a fresh checkout where `dist/` does not yet exist.
+The production branch is `main`. Set the deployment command to `npx wrangler deploy` and use the repository root. `wrangler.jsonc` runs `npm run build` before packaging the static files in `dist/`, so the dashboard build command can be left empty. This also builds a fresh checkout where `dist/` does not yet exist.
 
-Use Node.js 24.19.0 and pnpm 11.25.0 in the build environment. To check the deployment flow locally without publishing, run `npx wrangler deploy --dry-run`.
+Use Node.js 24.19.0 and npm 11.19.0 in the build environment. To check the deployment flow locally without publishing, run `npx wrangler deploy --dry-run`.
 
 The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.joeyddong-site.top`; it is consumed during Astro's static build, not at runtime. Custom domains are managed in the Cloudflare dashboard. Domain registration stays at Alibaba Cloud, with DNS hosted by Cloudflare. Current setup and verification are recorded in `docs/NEW_DOMAIN_SETUP.md`; the earlier domain changes and rollback records are in `docs/DOMAIN_MIGRATION.md`.
 
@@ -37,29 +37,40 @@ The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.jo
 | --- | --- | --- | --- |
 | Home | `/` | `/zh/` | `/ja/` |
 | Portfolio | `/portfolio/` | `/zh/portfolio/` | `/ja/portfolio/` |
+| Photography | `/photography/` | `/zh/photography/` | `/ja/photography/` |
+| Projects placeholder | `/projects/` | `/zh/projects/` | `/ja/projects/` |
 
 - On an unprefixed URL, choose the saved language, then the first supported browser language, then English.
 - An explicit localized URL is respected. `?lang=en`, `?lang=zh`, and `?lang=ja` can select a language when arriving from another subsite.
-- A language dropdown in the top-right header stays on the equivalent Home or Portfolio page and remembers the choice.
+- A language dropdown in the top-right header stays on the equivalent Home, Portfolio, Photography, or Projects page and remembers the choice.
 - The `joey_locale` cookie is scoped to `joeyddong-site.top` on that domain and its subdomains; the browser's local storage is an additional fallback.
 - Without JavaScript, every language page and the language links still work. Automatic language selection requires JavaScript.
 
 ## Subsites
 
-Blog, Projects, and Photography remain independent projects. Their links are centralized in `src/lib/site.ts` and carry a `lang` query parameter.
+Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects currently opens a local static placeholder showing “Work in progress” in the selected language. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
 
-The default targets are `blog.joeyddong-site.top`, `projects.joeyddong-site.top`, and `photography.joeyddong-site.top`. These new subsites are not yet deployed; this repository prepares their links without creating DNS bindings to unrelated content. The existing Blog at `joeyddong.top` remains separate. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
+Blog defaults to `blog.joeyddong-site.top`. Projects and Photography default to localized `/projects/` and `/photography/` pages; set `PUBLIC_PROJECTS_URL` or `PUBLIC_PHOTOGRAPHY_URL` when the respective independent subsite is ready. These new subsites are not yet deployed; this repository prepares their links without creating DNS bindings to unrelated content. The existing Blog at `joeyddong.top` remains separate. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
 
 Copy `.env.example` to `.env` to point links to other local development servers. Each receiving subsite must adopt the same language preference convention when it is integrated.
 
 ## Editing content and design
 
-- `src/lib/i18n.ts`: all three language versions of the current content.
+- `src/lib/photography.ts`: 78 original photo URLs and Photography copy in three languages. Images stay on the original OSS service; responsive WebP previews and lazy loading reduce transfers, and the viewer links to unchanged original URLs.
+- `src/lib/i18n.ts`: shared interface translations; `src/lib/portfolio.ts`: approved Portfolio content in three languages.
 - `src/lib/site.ts`: external links and portrait filename.
 - `src/styles/global.css`: shared colors, typography, spacing, and responsive layouts.
 - `src/components/HomePage.astro`: homepage sections.
-- `src/components/PortfolioPage.astro`: basic introduction; add verified personal experience here later.
+- `src/components/PortfolioPage.astro`: personal portrait, introduction, education, exploration, interests, and GitHub contact.
 
 The portrait is a temporary sample image, not the owner's photograph. Its source and replacement instructions are recorded in `docs/ASSETS.md`. The site references a local copy and loads no external fonts or image services at runtime.
 
 `PROJECT_CONTEXT.md` records the current requirements, confirmed design direction, implementation status, and remaining decisions.
+
+## Portfolio update (2026-10-13)
+
+Portfolio uses the approved Chinese, English, and Japanese content and a local copy of the owner’s old About portrait. Only the Home portrait remains a temporary sample. Use `npm ci` with the committed `package-lock.json`; no production settings or deployment were changed by this local update.
+
+## Shared animated background
+
+Home, Projects, Photography, and Portfolio share the default-on gradient animation from `src/components/AnimatedBackground.astro`. Home keeps its motion control; the other three pages have no animation toggle. The shared layout adds the background and the translucent navigation styling across all language routes.

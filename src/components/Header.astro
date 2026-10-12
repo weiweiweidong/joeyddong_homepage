@@ -18,7 +18,7 @@ const copy = messages[locale];
     <button class="menu-toggle" type="button" aria-label={copy.menu} aria-expanded="false" aria-controls="site-navigation">
       <span class="menu-label">{copy.menu}</span><span class="menu-symbol" aria-hidden="true">+</span>
     </button>
-    <LanguageSwitcher locale={locale} page={page === 'portfolio' ? 'portfolio' : 'home'} />
+    <LanguageSwitcher locale={locale} page={page === 'notFound' ? 'home' : page} />
   </div>
 </header>
 
