@@ -13,7 +13,7 @@ const optionNames: Record<Locale, string> = { en: 'English', zh: '中文', ja: '
   </summary>
   <nav class="language-options" aria-label={messages[locale].chooseLanguage}>
     {locales.map((language) => (
-      <a href={pagePath(language, page)} lang={htmlLanguages[language]} hreflang={htmlLanguages[language]} data-language={language} aria-label={optionNames[language]} aria-current={locale === language ? 'true' : undefined}>
+      <a href={`${pagePath(language, page)}?lang=${language}`} lang={htmlLanguages[language]} hreflang={htmlLanguages[language]} data-language={language} aria-label={optionNames[language]} aria-current={locale === language ? 'true' : undefined}>
         <span>{optionNames[language]}</span><span class="language-check" aria-hidden="true">{locale === language ? '✓' : ''}</span>
       </a>
     ))}
@@ -33,8 +33,10 @@ const optionNames: Record<Locale, string> = { en: 'English', zh: '中文', ja: '
   document.addEventListener('click', (event) => {
     if (event.target instanceof Node && !dropdown?.contains(event.target)) dropdown?.removeAttribute('open');
   });
-  dropdown?.addEventListener('focusout', (event) => {
-    if (!dropdown.contains(event.relatedTarget as Node | null)) dropdown.removeAttribute('open');
+  // Safari can blur the summary without focusing the tapped link. Closing on
+  // that blur hides the link before its click; close when focus arrives outside.
+  document.addEventListener('focusin', (event) => {
+    if (event.target instanceof Node && !dropdown?.contains(event.target)) dropdown?.removeAttribute('open');
   });
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && dropdown?.open) {
