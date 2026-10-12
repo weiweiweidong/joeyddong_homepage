@@ -9,10 +9,12 @@ User requested `joeyddong.top` for the new personal website and retirement of th
 - The old repository `weiweiweidong/weiweiweidong.github.io` has Pages publishing branch set to `None`. Its source is retained; GitHub no longer lists a live Pages site.
 - The previous DNS-only root CNAME to `weiweiweidong.github.io` was removed. Unrelated TXT records were retained. Registrar and nameservers were unchanged.
 - Astro site URL, shared metadata URL, and language-cookie domain now use `joeyddong.top`.
-- The separate new Blog at `blog.joeyddong-site.top` is retained, including the existing build variable and homepage navigation link. It is distinct from the retired GitHub Pages blog.
+- The separate new Blog's target address is `blog.joeyddong.top`. The homepage default link and `.env.example` use this address. The production build override must be updated to `PUBLIC_BLOG_URL=https://blog.joeyddong.top`; the separate Blog's site URL, DNS, and custom-domain binding also need to be migrated. These external changes have not been performed in this repository update. The Blog is distinct from the retired GitHub Pages blog.
 - Custom domains are declared in `wrangler.jsonc`; `src/worker.js` handles alias redirects before serving the static `ASSETS` binding.
 
 ## Validation
+
+The production validation below predates the subsequent Blog address change; the Blog tested at that time used `blog.joeyddong-site.top`.
 
 `npm run check` passed with zero errors or warnings; `npm run build` generated 13 pages. The redirect handler was checked for preservation of path and query parameters and primary-domain asset serving.
 

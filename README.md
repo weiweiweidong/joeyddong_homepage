@@ -21,7 +21,7 @@ npm run build
 npm run preview
 ```
 
-The production output is `dist/`. The homepage's primary domain is `https://joeyddong.top` on Cloudflare Workers. `www.joeyddong.top` and `joeyddong-site.top` redirect to the primary domain with HTTP 301, preserving paths and query parameters. The old GitHub Pages blog is offline; its repository is retained. The separate new Blog continues at `https://blog.joeyddong-site.top`.
+The production output is `dist/`. The homepage's primary domain is `https://joeyddong.top` on Cloudflare Workers. `www.joeyddong.top` and `joeyddong-site.top` redirect to the primary domain with HTTP 301, preserving paths and query parameters. The old GitHub Pages blog is offline; its repository is retained. The separate new Blog's target address is `https://blog.joeyddong.top`.
 
 ## Cloudflare Workers deployment
 
@@ -29,7 +29,7 @@ The production branch is `main`. Set the deployment command to `npx wrangler dep
 
 Use Node.js 24.19.0 and npm 11.19.0 in the build environment. To check the deployment flow locally without publishing, run `npx wrangler deploy --dry-run`.
 
-The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.joeyddong-site.top`; it is consumed during Astro's static build, not at runtime. Custom domains are declared in `wrangler.jsonc`. `src/worker.js` redirects the two aliases and otherwise serves the `ASSETS` binding. Domain registration stays at Alibaba Cloud, with DNS hosted by Cloudflare. Current setup and verification are recorded in `docs/PRIMARY_DOMAIN_SWITCH.md`; earlier domain changes are historical records in `docs/NEW_DOMAIN_SETUP.md` and `docs/DOMAIN_MIGRATION.md`.
+Set the Cloudflare production **build** variable to `PUBLIC_BLOG_URL=https://blog.joeyddong.top`; it is consumed during Astro's static build, not at runtime. An existing override with the previous Blog address must be updated before rebuilding and deploying. The separate Blog also needs its own custom-domain binding and DNS configuration for the new address. Homepage custom domains are declared in `wrangler.jsonc`. `src/worker.js` redirects the two aliases and otherwise serves the `ASSETS` binding. Domain registration stays at Alibaba Cloud, with DNS hosted by Cloudflare. Current setup and verification are recorded in `docs/PRIMARY_DOMAIN_SWITCH.md`; earlier domain changes are historical records in `docs/NEW_DOMAIN_SETUP.md` and `docs/DOMAIN_MIGRATION.md`.
 
 ## Pages and languages
 
@@ -50,7 +50,7 @@ The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.jo
 
 Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects currently opens a local static placeholder showing “Work in progress” in the selected language. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
 
-Blog defaults to `blog.joeyddong-site.top`. Projects and Photography always open localized `/projects/` and `/photography/` pages within this site. Their links are not overridden by environment variables. The old GitHub Pages blog has been retired. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
+Blog defaults to `blog.joeyddong.top`. Projects and Photography always open localized `/projects/` and `/photography/` pages within this site. Their links are not overridden by environment variables. The old GitHub Pages blog has been retired. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
 
 Copy `.env.example` to `.env` to point links to other local development servers. Each receiving subsite must adopt the same language preference convention when it is integrated.
 

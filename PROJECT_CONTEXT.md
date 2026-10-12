@@ -2,7 +2,7 @@
 
 更新日期：2026-10-13
 
-2026-10-13 域名切换：新个人网站主域名改为 `https://joeyddong.top`，`www.joeyddong.top` 与 `joeyddong-site.top` 301 跳转到主域名。旧 GitHub Pages 博客已关闭发布，保留源码。独立新博客 `https://blog.joeyddong-site.top` 保留。此决策替代下文历史域名规划，验收见 [docs/PRIMARY_DOMAIN_SWITCH.md](docs/PRIMARY_DOMAIN_SWITCH.md)。
+2026-10-13 域名切换：新个人网站主域名改为 `https://joeyddong.top`，`www.joeyddong.top` 与 `joeyddong-site.top` 301 跳转到主域名。旧 GitHub Pages 博客已关闭发布，保留源码。独立新博客目标地址改为 `https://blog.joeyddong.top`；当前仓库入口已更新，线上构建变量与博客域名绑定仍需同步。此决策替代下文历史域名规划，验收见 [docs/PRIMARY_DOMAIN_SWITCH.md](docs/PRIMARY_DOMAIN_SWITCH.md)。
 
 本文记录当前有效的需求、已确认的设计方向和实现状态。后续讨论与开发以此为基础；新的用户决策优先于本文。启动和维护细节见 [README.md](README.md)。
 
@@ -19,14 +19,14 @@
 | 栏目 | 用途 | 管理方式 | 预定网址 |
 | --- | --- | --- | --- |
 | Home | 网站主页与各栏目入口 | 当前主站仓库 | `https://joeyddong.top` |
-| Blog | 新博客 | 新独立项目，尚未部署 | `https://blog.joeyddong-site.top` |
+| Blog | 新博客 | 独立项目，目标域名待线上配置 | `https://blog.joeyddong.top` |
 | Projects | Coding、Vibe Coding、Data Science 等个人项目 | 后续独立仓库 | `https://projects.joeyddong-site.top` |
 | Photography | 个人摄影作品 | 后续独立仓库 | `https://photography.joeyddong-site.top` |
 | Portfolio | 个人简介与精选经历 | 当前主站仓库 | `https://joeyddong.top/portfolio/` |
 
 - 主站仓库：[weiweiweidong/joeyddong_homepage](https://github.com/weiweiweidong/joeyddong_homepage)。
 - Blog 仓库：[weiweiweidong/My_Hexo_Blog_Source](https://github.com/weiweiweidong/My_Hexo_Blog_Source)。
-- 用户最新要求：新主页使用 `joeyddong.top`；旧 GitHub Pages 博客下线。独立新博客保留 `blog.joeyddong-site.top`，Projects、Photography 使用主站本地路由。
+- 用户最新要求：新主页使用 `joeyddong.top`；旧 GitHub Pages 博客下线。独立新博客使用 `blog.joeyddong.top`，Projects、Photography 使用主站本地路由。
 - 当前仓库负责 Home、Portfolio，以及后续需要的其他主站静态页面。
 - 四个网站分别维护仓库，统一品牌、五项导航与基础视觉；具体内容布局可以不同。
 
@@ -121,13 +121,13 @@ Blog、Projects 和 Photography 尚未接入这套语言规则，因此目前不
 | `src/styles/global.css` | 共享配色、字体、间距与响应式布局 |
 | `public/` | 本地图片与网站图标 |
 
-Blog 地址可通过 `.env` 中的 `PUBLIC_BLOG_URL` 覆盖，示例见 `.env.example`。新 Blog 链接默认为 `https://blog.joeyddong-site.top`。Projects 和 Photography 固定使用对应语言的站内页面，不受旧环境变量覆盖；未来独立子站上线时再调整路由。
+Blog 地址可通过 `.env` 中的 `PUBLIC_BLOG_URL` 覆盖，示例见 `.env.example`。新 Blog 链接默认为 `https://blog.joeyddong.top`。Projects 和 Photography 固定使用对应语言的站内页面，不受旧环境变量覆盖；未来独立子站上线时再调整路由。
 
 ## 7. 当前进度与后续事项
 
 主站主页基础版已完成，包括共享 Header / Footer / Layout、三语 Home、基础 Portfolio、语言切换与记忆、手机导航和基础页面元信息。已通过 Astro 检查与静态构建，并检查了桌面、手机布局及主要交互。
 
-生产构建环境使用 `PUBLIC_BLOG_URL=https://blog.joeyddong-site.top`，指向新 Blog 的预定地址。新的 Blog、Projects 与 Photography 尚未创建或部署独立站点，本次只准备新域名下的入口。已有 Hexo Blog 保持不变。
+生产构建环境需同步为 `PUBLIC_BLOG_URL=https://blog.joeyddong.top`，避免旧变量覆盖源码默认地址。此次已修改主站仓库的 Blog 入口和环境变量示例；线上构建变量、独立 Blog 的站点 URL、DNS 与托管域名绑定尚未在此次修改中更新。Projects 与 Photography 当前使用主站本地路由。
 
 后续事项：
 
@@ -141,7 +141,7 @@ Blog 地址可通过 `.env` 中的 `PUBLIC_BLOG_URL` 覆盖，示例见 `.env.ex
 
 ## 8. 后续开发原则
 
-最新域名安排和接入进度以 `docs/NEW_DOMAIN_SETUP.md` 为准，上一节对调旧域名的部署记录作为历史保留。
+最新域名安排和接入进度以 `docs/PRIMARY_DOMAIN_SWITCH.md` 为准，`docs/NEW_DOMAIN_SETUP.md` 与上一节对调旧域名的部署记录作为历史保留。
 
 - 优先静态化、可读性与可维护性，使用语义化 HTML，兼顾桌面和手机。
 - 各站统一基础视觉，同时允许内容采用合适的独立布局。

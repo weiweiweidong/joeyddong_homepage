@@ -6,7 +6,7 @@ export const site = {
   github: 'https://github.com/weiweiweidong',
   portrait: '/images/portfolio-portrait.jpg',
   destinations: {
-    blog: import.meta.env.PUBLIC_BLOG_URL || 'https://blog.joeyddong-site.top',
+    blog: import.meta.env.PUBLIC_BLOG_URL || 'https://blog.joeyddong.top',
   },
 };
 
