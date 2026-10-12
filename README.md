@@ -50,7 +50,7 @@ The Cloudflare production **build** variable is `PUBLIC_BLOG_URL=https://blog.jo
 
 Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects currently opens a local static placeholder showing “Work in progress” in the selected language. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
 
-Blog defaults to `blog.joeyddong-site.top`. Projects and Photography default to localized `/projects/` and `/photography/` pages; set `PUBLIC_PROJECTS_URL` or `PUBLIC_PHOTOGRAPHY_URL` when the respective independent subsite is ready. These new subsites are not yet deployed; this repository prepares their links without creating DNS bindings to unrelated content. The existing Blog at `joeyddong.top` remains separate. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
+Blog defaults to `blog.joeyddong-site.top`. Projects and Photography always open localized `/projects/` and `/photography/` pages within this site. Their links are not overridden by environment variables, so old build settings cannot send visitors to unlaunched subsites. The existing Blog at `joeyddong.top` remains separate. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
 
 Copy `.env.example` to `.env` to point links to other local development servers. Each receiving subsite must adopt the same language preference convention when it is integrated.
 

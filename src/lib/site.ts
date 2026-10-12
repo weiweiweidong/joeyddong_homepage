@@ -7,17 +7,14 @@ export const site = {
   portrait: '/images/portfolio-portrait.jpg',
   destinations: {
     blog: import.meta.env.PUBLIC_BLOG_URL || 'https://blog.joeyddong-site.top',
-    projects: import.meta.env.PUBLIC_PROJECTS_URL || '',
-    photography: import.meta.env.PUBLIC_PHOTOGRAPHY_URL || '',
   },
 };
 
-export type Destination = keyof typeof site.destinations;
+export type Destination = 'blog' | 'projects' | 'photography';
 
 // The receiving subsite can read this query parameter before its browser-language fallback.
 export function destinationUrl(destination: Destination, locale: Locale) {
-  if (destination === 'projects' && !site.destinations.projects) return pagePath(locale, 'projects');
-  if (destination === 'photography' && !site.destinations.photography) return pagePath(locale, 'photography');
+  if (destination !== 'blog') return pagePath(locale, destination);
   const url = new URL(site.destinations[destination]);
   url.searchParams.set('lang', locale);
   return url.toString();

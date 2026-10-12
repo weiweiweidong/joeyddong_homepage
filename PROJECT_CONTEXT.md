@@ -119,7 +119,7 @@ Blog、Projects 和 Photography 尚未接入这套语言规则，因此目前不
 | `src/styles/global.css` | 共享配色、字体、间距与响应式布局 |
 | `public/` | 本地图片与网站图标 |
 
-子站地址可通过 `.env` 中的 `PUBLIC_BLOG_URL`、`PUBLIC_PROJECTS_URL`、`PUBLIC_PHOTOGRAPHY_URL` 覆盖，示例见 `.env.example`。新 Blog 链接默认为 `https://blog.joeyddong-site.top`。
+Blog 地址可通过 `.env` 中的 `PUBLIC_BLOG_URL` 覆盖，示例见 `.env.example`。新 Blog 链接默认为 `https://blog.joeyddong-site.top`。Projects 和 Photography 固定使用对应语言的站内页面，不受旧环境变量覆盖；未来独立子站上线时再调整路由。
 
 ## 7. 当前进度与后续事项
 
