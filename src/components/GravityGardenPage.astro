@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GravityGarden from './GravityGarden.astro';
+import { pagePath, type Locale } from '../lib/i18n';
+import { projects } from '../lib/projects';
+import { site } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = projects[locale];
+---
+<BaseLayout locale={locale} page="projects/gravity-garden" title={`${copy.name} — ${site.name}`} description={copy.cardDescription}>
+  <main class="shell projects-main" id="main-content">
+    <header class="projects-intro">
+      <a class="project-back" href={pagePath(locale, 'projects')}><span aria-hidden="true">←</span> {copy.backToProjects}</a>
+      <p class="eyebrow">01 / VIBE CODING</p>
+      <h1 id="garden-title">{copy.name}</h1>
+      <p class="intro-description">{copy.cardDescription}</p>
+    </header>
+    <article aria-labelledby="garden-title">
+      <GravityGarden copy={copy} />
+      <div class="project-notes">
+        <p>{copy.about}</p>
+        <ul aria-label={copy.tagsLabel}><li>Creative coding</li><li>Canvas 2D</li><li>Generative art</li></ul>
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+<style>
+  .projects-main { padding-block: clamp(40px, 6vw, 80px) 90px; }
+  .projects-intro { max-width: 850px; margin-bottom: 36px; }
+  .project-back { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-bottom: 24px; font-size: 14px; }
+  .project-back:hover { text-decoration: underline; }
+  h1 { margin-top: 20px; font-size: clamp(44px, 6.5vw, 88px); line-height: 1.12; letter-spacing: -.045em; text-wrap: balance; }
+  .intro-description { max-width: 600px; margin-top: 24px; font-size: 18px; line-height: 1.8; }
+  .project-notes { display: flex; justify-content: space-between; align-items: start; gap: 32px; margin-top: 26px; }
+  .project-notes > p { max-width: 640px; font-size: 15px; line-height: 1.8; }
+  ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+  li { padding: 5px 10px; border: 1px solid var(--color-line); border-radius: 6px; font-size: 10px; white-space: nowrap; }
+  @media (max-width: 700px) { .project-notes { flex-direction: column; gap: 20px; } }
+</style>

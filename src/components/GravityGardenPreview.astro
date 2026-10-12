@@ -1,0 +1,18 @@
+---
+// A static cover keeps the project index light; the simulation lives in the demo.
+const points = Array.from({ length: 1200 }, (_, i) => {
+  const u = (i % 80) / 80 * Math.PI * 2;
+  const v = (Math.floor(i / 80) / 15 + (i % 80) * .61803398875) * Math.PI * 2;
+  const radius = .78 + (.28 + .065 * Math.sin(u * 3)) * Math.cos(v);
+  const x = radius * Math.cos(u), y = radius * Math.sin(u);
+  const z = .28 * Math.sin(v) + .14 * Math.sin(u * 3);
+  const ry = y * Math.cos(.65) - z * Math.sin(.65);
+  const depth = y * Math.sin(.65) + z * Math.cos(.65);
+  const perspective = 2.8 / (2.8 - depth);
+  return { x: 240 + x * 125 * perspective, y: 185 + ry * 125 * perspective, size: (.65 + (i % 5) * .22) * perspective, hue: 160 + 85 * (Math.sin(u) * .5 + .5), opacity: .25 + (depth + 1.5) / 3 * .6 };
+});
+---
+<svg viewBox="0 0 480 356" aria-hidden="true" focusable="false">
+  {points.map((p) => <circle cx={p.x} cy={p.y} r={p.size} fill={`hsl(${p.hue},85%,72%)`} opacity={p.opacity} />)}
+</svg>
+<style>svg { display: block; width: 100%; height: 100%; }</style>

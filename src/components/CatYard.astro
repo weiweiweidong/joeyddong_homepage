@@ -1,0 +1,37 @@
+---
+import CatYardScene from './CatYardScene.astro';
+import type { CatYardCopy } from '../lib/cat-yard-copy';
+interface Props { copy: CatYardCopy }
+const { copy } = Astro.props;
+---
+<div class="cat-yard" data-cat-yard data-copy={JSON.stringify(copy)}>
+  <div class="yard-stage"><CatYardScene copy={copy} /></div>
+  <div class="yard-info"><p data-status role="status">{copy.statuses.idle}</p><label>{copy.food}<meter min="0" max="1" value="1">100%</meter></label></div>
+  <div class="yard-toolbar">
+    <p>{copy.hint}</p>
+    <div class="yard-controls">
+      <button type="button" data-action="call">{copy.call}</button>
+      <button type="button" data-action="yarn">{copy.yarn}</button>
+      <button type="button" data-action="ball">{copy.ball}</button>
+      <button type="button" data-action="feed">{copy.feed}</button>
+      <button type="button" class="pause" data-action="pause" aria-pressed="false">{copy.pause}</button>
+    </div>
+  </div>
+</div>
+<script>
+  import { initCatYard } from '../lib/cat-yard';
+  document.querySelectorAll<HTMLElement>('[data-cat-yard]').forEach(initCatYard);
+</script>
+<style>
+  .cat-yard { overflow: hidden; border-radius: 18px; background: #faf1de; color: #514b3b; box-shadow: 0 24px 64px #441e2826; }
+  .yard-info { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 26px; border-top: 1px solid #66754626; background: #f2ead5; font-size: 13px; }
+  label { display: flex; align-items: center; gap: 10px; font-size: 11px; white-space: nowrap; }
+  meter { width: 80px; height: 12px; accent-color: #7f9c68; }
+  .yard-toolbar { padding: 18px 26px 22px; }
+  .yard-toolbar > p { font-size: 12px; line-height: 1.8; color: #756e5a; }
+  .yard-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  button { min-height: 42px; padding: 8px 14px; border: 1px solid #89856850; border-radius: 8px; background: #fffaf0; font-size: 12px; cursor: pointer; }
+  button:hover { background: #e2e8cd; } .pause { margin-left: auto; }
+  [data-paused="true"] button:not(.pause) { opacity: .5; cursor: default; }
+  @media (max-width: 700px) { .yard-info { padding: 12px 16px; font-size: 11px; } .yard-toolbar { padding: 16px; } .yard-controls { gap: 8px; } button { padding-inline: 10px; } }
+</style>

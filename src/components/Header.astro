@@ -11,7 +11,7 @@ const copy = messages[locale];
   <a class="wordmark" href={pagePath(locale)} aria-label={`${site.name} — Home`}>{site.name}<span>.</span></a>
   <nav class="site-navigation" id="site-navigation" aria-label={copy.mainNavigation}>
     {navigation(locale).map((item) => (
-      <a href={item.href} aria-current={item.key === page ? 'page' : undefined}>{copy.navigation[item.key]}</a>
+      <a href={item.href} aria-current={item.key === page || (item.key === 'projects' && page.startsWith('projects/')) ? 'page' : undefined}>{copy.navigation[item.key]}</a>
     ))}
   </nav>
   <div class="header-actions">

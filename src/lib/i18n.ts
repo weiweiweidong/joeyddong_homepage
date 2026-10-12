@@ -1,6 +1,6 @@
 export const locales = ['en', 'zh', 'ja'] as const;
 export type Locale = (typeof locales)[number];
-export type Page = 'home' | 'portfolio' | 'photography' | 'projects';
+export type Page = 'home' | 'portfolio' | 'photography' | 'projects' | 'projects/gravity-garden' | 'projects/cat-yard' | 'projects/porsche-garage';
 
 export function pagePath(locale: Locale, page: Page = 'home') {
   const prefix = locale === 'en' ? '' : `/${locale}`;

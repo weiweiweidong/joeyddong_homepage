@@ -38,17 +38,17 @@ Set the Cloudflare production **build** variable to `PUBLIC_BLOG_URL=https://blo
 | Home | `/` | `/zh/` | `/ja/` |
 | Portfolio | `/portfolio/` | `/zh/portfolio/` | `/ja/portfolio/` |
 | Photography | `/photography/` | `/zh/photography/` | `/ja/photography/` |
-| Projects placeholder | `/projects/` | `/zh/projects/` | `/ja/projects/` |
+| Projects | `/projects/` | `/zh/projects/` | `/ja/projects/` |
 
 - On an unprefixed URL, choose the saved language, then the first supported browser language, then English.
 - An explicit localized URL is respected. `?lang=en`, `?lang=zh`, and `?lang=ja` can select a language when arriving from another subsite.
-- A language dropdown in the top-right header stays on the equivalent Home, Portfolio, Photography, or Projects page and remembers the choice.
+- A language dropdown in the top-right header stays on the equivalent page, including each project demo, and remembers the choice.
 - The `joey_locale` cookie is scoped to `joeyddong.top` on that domain and its subdomains; the browser's local storage is an additional fallback. The separate Blog receives the language through the `lang` query parameter.
 - Without JavaScript, every language page and the language links still work. Automatic language selection requires JavaScript.
 
 ## Subsites
 
-Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects currently opens a local static placeholder showing “Work in progress” in the selected language. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
+Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects opens a local card index with two sections: hand-written Coding projects (currently “Work in progress”) and Vibe Coding demos. Each demo has a separate localized page. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
 
 Blog defaults to `blog.joeyddong.top`. Projects and Photography always open localized `/projects/` and `/photography/` pages within this site. Their links are not overridden by environment variables. The old GitHub Pages blog has been retired. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
 
@@ -74,3 +74,15 @@ Portfolio uses the approved Chinese, English, and Japanese content and a local c
 ## Shared animated background
 
 Home, Projects, Photography, and Portfolio share the default-on gradient animation from `src/components/AnimatedBackground.astro`. Home keeps its motion control; the other three pages have no animation toggle. The shared layout adds the background and the translucent navigation styling across all language routes.
+
+## Projects and demos (2026-10-13)
+
+Projects has three interactive demos, each available in English, Chinese, and Japanese. Prefix the following routes with `/zh` or `/ja` for localized versions:
+
+- `/projects/gravity-garden/`: particle sculpture with cursor attraction, click ripples, palettes, and motion controls.
+- `/projects/cat-yard/`: a cat that wanders, plays with yarn and a ball, eats food, and responds to the pointer; toys can be dragged.
+- `/projects/porsche-garage/`: a Three.js Porsche 911 Turbo viewer with orbit, zoom, independent doors, paint colors, and optional auto rotation.
+
+The index uses static covers; Three.js and the car model load only on the garage demo. Demo motion respects reduced-motion preferences and pauses rendering when hidden. Shared site background behavior remains as documented above.
+
+Card content is maintained in `src/lib/projects.ts`; demo copy lives in the corresponding locale files. The Porsche model is attributed to Karol Miklas / Lionsharp Studios under CC BY 4.0, with source and modifications recorded in `public/models/porsche-911/LICENSE.txt` and linked on the demo. The optimized model is committed so builds do not need to download it. To regenerate its textures and independent door geometry, run `npm run porsche:prepare` (requires network access; source revision is pinned).

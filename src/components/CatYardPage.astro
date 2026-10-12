@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CatYard from './CatYard.astro';
+import { pagePath, type Locale } from '../lib/i18n';
+import { projects } from '../lib/projects';
+import { catYardCopy } from '../lib/cat-yard-copy';
+import { site } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = catYardCopy[locale];
+---
+<BaseLayout locale={locale} page="projects/cat-yard" title={`${copy.name} — ${site.name}`} description={copy.description}>
+  <main class="shell cat-main" id="main-content">
+    <header>
+      <a class="project-back" href={pagePath(locale, 'projects')}><span aria-hidden="true">←</span> {projects[locale].backToProjects}</a>
+      <p class="eyebrow">02 / VIBE CODING</p>
+      <h1>{copy.name}</h1>
+      <p class="description">{copy.description}</p>
+    </header>
+    <CatYard copy={copy} />
+  </main>
+</BaseLayout>
+<style>
+  .cat-main { padding-block: clamp(40px, 6vw, 80px) 90px; }
+  header { max-width: 850px; margin-bottom: 36px; }
+  .project-back { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-bottom: 24px; font-size: 14px; }
+  .project-back:hover { text-decoration: underline; }
+  h1 { margin-top: 20px; font-size: clamp(44px, 6.5vw, 88px); line-height: 1.12; letter-spacing: -.045em; }
+  .description { max-width: 640px; margin-top: 24px; font-size: 18px; line-height: 1.8; }
+</style>

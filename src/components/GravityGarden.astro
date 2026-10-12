@@ -1,0 +1,197 @@
+---
+import type { ProjectCopy } from '../lib/projects';
+interface Props { copy: ProjectCopy }
+const { copy } = Astro.props;
+---
+<div class="garden" data-garden>
+  <div class="garden-stage">
+    <div class="stage-label" aria-hidden="true"><span class="stage-mark">✳</span><span>GRAVITY<br />GARDEN</span></div>
+    <span class="stage-index" aria-hidden="true">EXPERIMENT / 001</span>
+    <canvas role="button" tabindex="0" aria-label={copy.canvasLabel}>{copy.fallback}</canvas>
+    <div class="stage-bottom" aria-hidden="true"><span>LIGHT. MOTION. YOU.</span><span>∞</span></div>
+    <noscript><p class="no-script">{copy.canvasLabel}</p></noscript>
+  </div>
+  <div class="garden-toolbar">
+    <p class="garden-hint"><span class="mouse-hint">{copy.hint}</span><span class="touch-hint">{copy.touchHint}</span></p>
+    <div class="garden-controls">
+      <div class="palette-picker" role="group" aria-label={copy.palette}>
+        {copy.palettes.map((name, index) => <button class={`palette palette-${index}`} type="button" data-palette={index} aria-label={name} title={name} aria-pressed={index === 0 ? 'true' : 'false'}><span></span></button>)}
+      </div>
+      <button class="motion-button" type="button" data-pause data-play-label={copy.play} data-pause-label={copy.pause} aria-pressed="false" disabled>{copy.pause}</button>
+      <button class="reset-button" type="button" data-reset disabled>{copy.reset} <span aria-hidden="true">↺</span></button>
+    </div>
+  </div>
+</div>
+<style>
+  .garden { overflow: hidden; border-radius: 18px; background: #090d18; color: #edf1ff; box-shadow: 0 24px 64px #441e2826; }
+  .garden-stage { position: relative; height: clamp(380px, 47vw, 620px); background: radial-gradient(ellipse at 50% 48%, #132236, #090d18 70%); }
+  canvas { display: block; width: 100%; height: 100%; cursor: crosshair; touch-action: pan-y; border-radius: 18px 18px 0 0; }
+  canvas:focus-visible { outline: 2px solid #9effde; outline-offset: -4px; }
+  .stage-label, .stage-index, .stage-bottom { position: absolute; pointer-events: none; z-index: 1; }
+  .stage-label { left: 30px; top: 28px; display: flex; align-items: center; gap: 12px; font-size: 11px; line-height: 1.25; letter-spacing: .16em; }
+  .stage-mark { font-size: 36px; color: #b0f0df; line-height: 1; }
+  .stage-index { right: 30px; top: 32px; font-size: 9px; letter-spacing: .14em; color: #8b98b1; }
+  .stage-bottom { bottom: 26px; left: 30px; right: 30px; display: flex; align-items: center; justify-content: space-between; color: #8b98b1; font-size: 9px; letter-spacing: .2em; }
+  .stage-bottom > span:last-child { font-size: 24px; line-height: 1; }
+  .garden-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 26px; border-top: 1px solid #ffffff14; }
+  .garden-hint { font-size: 12px; color: #aab6cb; }
+  .garden-controls { display: flex; align-items: center; gap: 12px; }
+  .palette-picker { display: flex; gap: 2px; margin-right: 8px; }
+  button { cursor: pointer; }
+  button:disabled { cursor: default; opacity: .5; }
+  .palette { display: grid; place-items: center; width: 36px; height: 40px; padding: 0; border: 0; background: none; border-radius: 6px; }
+  .palette span { width: 17px; height: 17px; border-radius: 50%; background: linear-gradient(135deg, #7efadc, #8e85ff); }
+  .palette-1 span { background: linear-gradient(135deg, #ffd184, #fb627d); }
+  .palette-2 span { background: linear-gradient(135deg, #9ac5ff, #e087f8); }
+  .palette[aria-pressed="true"] span { outline: 1px solid #fff; outline-offset: 4px; }
+  .motion-button, .reset-button { min-height: 40px; padding: 6px 14px; border: 1px solid #ffffff26; border-radius: 7px; background: #ffffff05; font-size: 12px; white-space: nowrap; }
+  .motion-button:hover, .reset-button:hover { background: #ffffff14; }
+  .reset-button span { margin-left: 5px; }
+  .touch-hint { display: none; }
+  .no-script { position: absolute; left: 10%; right: 10%; top: 45%; text-align: center; }
+  @media (pointer: coarse) { .mouse-hint { display: none; } .touch-hint { display: inline; } }
+  @media (max-width: 700px) {
+    .garden-stage { height: 400px; }
+    .stage-label { left: 20px; top: 20px; }
+    .stage-index { right: 20px; top: 24px; font-size: 8px; }
+    .stage-bottom { left: 20px; right: 20px; bottom: 20px; }
+    .garden-toolbar { flex-direction: column; align-items: start; padding: 16px 20px; gap: 10px; }
+    .garden-controls { width: 100%; } .palette-picker { margin-right: auto; }
+  }
+</style>
+<script>
+  function initGarden(root: HTMLElement) {
+    const canvas = root.querySelector('canvas')!;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    const ctx = context;
+    const pause = root.querySelector<HTMLButtonElement>('[data-pause]')!;
+    const reset = root.querySelector<HTMLButtonElement>('[data-reset]')!;
+    const palettes = root.querySelectorAll<HTMLButtonElement>('[data-palette]');
+    pause.disabled = reset.disabled = false;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let paused = reducedMotion.matches;
+    let visible = false;
+    let width = 1, height = 1, time = 0, last = 0, frame = 0, palette = 0;
+    let tiltX = 0, tiltY = 0;
+    const pointer = { x: 0, y: 0, active: false };
+    const ripples: { x: number; y: number; age: number }[] = [];
+    const hues = [[160, 245], [24, -15], [215, 290]];
+    // Deterministic seeds keep the sculpture stable across resize and reset.
+    const particles = Array.from({ length: 2400 }, (_, i) => ({
+      u: (i % 120) / 120 * Math.PI * 2,
+      v: (Math.floor(i / 120) / 20 + (i % 120) * .61803398875) * Math.PI * 2,
+      band: (i % 7) / 7,
+      size: .65 + (i % 5) * .22,
+    }));
+    function syncPause() {
+      pause.textContent = (paused ? pause.dataset.playLabel : pause.dataset.pauseLabel)!;
+      pause.setAttribute('aria-pressed', String(paused));
+    }
+    function draw(dt: number) {
+      tiltX += ((pointer.active ? pointer.y / height - .5 : 0) - tiltX) * Math.min(1, dt * 5);
+      tiltY += ((pointer.active ? pointer.x / width - .5 : 0) - tiltY) * Math.min(1, dt * 5);
+      ctx.clearRect(0, 0, width, height);
+      const scale = Math.min(width * .31, height * .38);
+      const colors = hues[palette];
+      const glow = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, scale * 1.7);
+      glow.addColorStop(0, `hsla(${colors[0]}, 80%, 50%, .07)`);
+      glow.addColorStop(1, 'transparent');
+      ctx.fillStyle = glow; ctx.fillRect(0, 0, width, height);
+      // Sparse stars give the rotating sculpture depth without a busy backdrop.
+      for (let i = 0; i < 75; i++) {
+        ctx.fillStyle = `rgba(173,196,232,${.12 + (i % 4) * .06})`;
+        ctx.fillRect((i * 127.7 % width), (i * 83.3 % height), 1, 1);
+      }
+      ctx.globalCompositeOperation = 'lighter';
+      const ax = .65 + tiltX * .85, ay = time * .13 + tiltY * .9;
+      const cx = Math.cos(ax), sx = Math.sin(ax), cy = Math.cos(ay), sy = Math.sin(ay);
+      for (const p of particles) {
+        const u = p.u + time * .16;
+        const v = p.v + time * .25;
+        const tube = .28 + .065 * Math.sin(u * 3 + time * .7);
+        const radius = .78 + tube * Math.cos(v);
+        const x = radius * Math.cos(u), y = radius * Math.sin(u);
+        const z = tube * Math.sin(v) + .14 * Math.sin(u * 3 + time * .5);
+        const rx = x * cy + z * sy, rz = -x * sy + z * cy;
+        const ry = y * cx - rz * sx, depth = y * sx + rz * cx;
+        const perspective = 2.8 / (2.8 - depth);
+        let px = width / 2 + rx * scale * perspective;
+        let py = height / 2 + ry * scale * perspective;
+        if (pointer.active) {
+          const dx = pointer.x - px, dy = pointer.y - py;
+          const distance = Math.hypot(dx, dy);
+          const pull = Math.exp(-distance / 130) * .32;
+          px += dx * pull; py += dy * pull;
+        }
+        for (const ripple of ripples) {
+          const dx = px - ripple.x, dy = py - ripple.y, distance = Math.hypot(dx, dy);
+          const wave = Math.exp(-Math.pow((distance - ripple.age * 250) / 45, 2)) * 28 * Math.max(0, 1 - ripple.age / 2.4);
+          px += dx / Math.max(1, distance) * wave; py += dy / Math.max(1, distance) * wave;
+        }
+        const hue = colors[0] + (colors[1] - colors[0]) * (Math.sin(u + p.band * 2) * .5 + .5);
+        const alpha = .25 + (depth + 1.5) / 3 * .6;
+        const size = p.size * perspective;
+        ctx.fillStyle = `hsla(${hue}, 85%, 72%, ${alpha})`;
+        ctx.beginPath(); ctx.arc(px, py, size, 0, Math.PI * 2); ctx.fill();
+        if (p.band === 0) {
+          ctx.fillStyle = `hsla(${hue}, 90%, 65%, .045)`;
+          ctx.beginPath(); ctx.arc(px, py, size * 5, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      for (const ripple of ripples) {
+        ctx.strokeStyle = `hsla(${colors[0]}, 90%, 80%, ${Math.max(0, .28 * (1 - ripple.age / 2.4))})`;
+        ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(ripple.x, ripple.y, ripple.age * 250, 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    function tick(now: number) {
+      frame = 0;
+      const dt = Math.min((now - last) / 1000, .04); last = now;
+      time += dt;
+      for (let i = ripples.length - 1; i >= 0; i--) { ripples[i].age += dt; if (ripples[i].age > 2.4) ripples.splice(i, 1); }
+      draw(dt); schedule();
+    }
+    function schedule() {
+      if (!paused && visible && !document.hidden && !frame) { last = performance.now(); frame = requestAnimationFrame(tick); }
+    }
+    function stop() { cancelAnimationFrame(frame); frame = 0; }
+    function resize() {
+      const bounds = canvas.getBoundingClientRect(); width = Math.max(1, bounds.width); height = Math.max(1, bounds.height);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw(0);
+    }
+    function updatePointer(event: PointerEvent) {
+      const bounds = canvas.getBoundingClientRect();
+      pointer.x = event.clientX - bounds.left; pointer.y = event.clientY - bounds.top; pointer.active = true;
+    }
+    canvas.addEventListener('pointermove', updatePointer);
+    canvas.addEventListener('pointerdown', (event) => {
+      updatePointer(event);
+      if (!paused) ripples.push({ x: pointer.x, y: pointer.y, age: 0 });
+      if (ripples.length > 8) ripples.shift();
+    });
+    const clearPointer = () => { pointer.active = false; };
+    canvas.addEventListener('pointerleave', clearPointer);
+    canvas.addEventListener('pointercancel', clearPointer);
+    canvas.addEventListener('pointerup', (event) => { if (event.pointerType !== 'mouse') clearPointer(); });
+    canvas.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (!paused) { ripples.push({ x: width / 2, y: height / 2, age: 0 }); if (ripples.length > 8) ripples.shift(); }
+      }
+    });
+    pause.addEventListener('click', () => { paused = !paused; syncPause(); if (paused) stop(); else schedule(); });
+    palettes.forEach((button, index) => button.addEventListener('click', () => {
+      palette = index; palettes.forEach((item, i) => item.setAttribute('aria-pressed', String(i === index))); draw(0);
+    }));
+    reset.addEventListener('click', () => { time = 0; tiltX = tiltY = 0; ripples.length = 0; pointer.active = false; draw(0); });
+    reducedMotion.addEventListener('change', () => { paused = reducedMotion.matches; syncPause(); if (paused) stop(); else schedule(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else schedule(); });
+    new ResizeObserver(resize).observe(canvas);
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) schedule(); else stop(); }).observe(canvas);
+    syncPause(); resize();
+  }
+  document.querySelectorAll<HTMLElement>('[data-garden]').forEach(initGarden);
+</script>

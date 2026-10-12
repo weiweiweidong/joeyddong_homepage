@@ -1,0 +1,58 @@
+---
+import type { PorscheCopy } from '../lib/porsche-copy';
+interface Props { copy: PorscheCopy }
+const { copy } = Astro.props;
+---
+<div class="garage" data-garage data-copy={JSON.stringify(copy)}>
+  <div class="garage-stage">
+    <div class="stage-title" aria-hidden="true"><span>PORSCHE</span><strong>911 <em>Turbo</em></strong><small>1975 / THE ORIGINAL TURBO</small></div>
+    <span class="stage-index" aria-hidden="true">GARAGE / 003</span>
+    <canvas tabindex="0" aria-label={copy.canvasLabel}></canvas>
+    <div class="garage-loading"><span class="loading-mark" aria-hidden="true">911</span><p data-loading>{copy.loading}</p><button type="button" data-retry hidden>{copy.retry}</button></div>
+  </div>
+  <div class="garage-toolbar">
+    <p class="garage-hint">{copy.hint}</p>
+    <div class="garage-controls">
+      <div class="paint-picker" role="group" aria-label={copy.paint}>
+        {copy.colors.map((name,i) => <button class={`paint paint-${i}`} type="button" data-paint={i} aria-label={name} title={name} aria-pressed={i===0?'true':'false'} disabled><span></span></button>)}
+      </div>
+      <button type="button" data-door="left" aria-pressed="false" disabled>{copy.leftDoor} <span aria-hidden="true">↗</span></button>
+      <button type="button" data-door="right" aria-pressed="false" disabled>{copy.rightDoor} <span aria-hidden="true">↗</span></button>
+      <button type="button" data-auto aria-pressed="false" disabled>{copy.autoRotate}</button>
+      <button type="button" data-reset disabled>{copy.reset} <span aria-hidden="true">↺</span></button>
+    </div>
+    <p class="garage-status" data-status role="status">{copy.loading}</p>
+  </div>
+</div>
+<script>
+  import { initPorscheGarage } from '../lib/porsche-garage';
+  document.querySelectorAll<HTMLElement>('[data-garage]').forEach(initPorscheGarage);
+</script>
+<style>
+  .garage { overflow: hidden; border-radius: 18px; background: #161b20; color: #f3f0e8; box-shadow: 0 24px 64px #441e2833; }
+  .garage-stage { position: relative; height: clamp(430px, 48vw, 650px); }
+  canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+  canvas:active { cursor: grabbing; } canvas:focus-visible { outline: 2px solid #e4bd56; outline-offset: -4px; }
+  .stage-title { position: absolute; top: 28px; left: 30px; z-index: 1; display: grid; gap: 3px; pointer-events: none; }
+  .stage-title > span { font-size: 10px; letter-spacing: .35em; }
+  .stage-title strong { font-size: 42px; line-height: 1.3; font-weight: 500; letter-spacing: -.06em; }
+  .stage-title em { font-family: Georgia, serif; font-size: 26px; }
+  .stage-title small, .stage-index { font-size: 8px; letter-spacing: .14em; color: #a7afb6; }
+  .stage-index { position: absolute; right: 30px; top: 33px; pointer-events: none; z-index: 1; }
+  .garage-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #161b20; padding: 32px; text-align: center; font-size: 14px; }
+  .garage-loading[hidden] { display: none; }
+  .loading-mark { font-size: 90px; line-height: 1; letter-spacing: -.07em; color: #e6bd56; }
+  .garage-toolbar { padding: 18px 26px; border-top: 1px solid #ffffff16; }
+  .garage-hint { color: #b9bdc3; font-size: 12px; line-height: 1.8; }
+  .garage-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+  button { min-height: 42px; border: 1px solid #ffffff30; border-radius: 7px; padding: 8px 12px; background: #ffffff05; font-size: 12px; cursor: pointer; }
+  button:hover { background: #ffffff14; } button:disabled { opacity: .4; cursor: default; }
+  button[aria-pressed="true"]:not(.paint) { color: #efd68b; border-color: #e4bd5670; background: #e4bd5614; }
+  .paint-picker { display: flex; gap: 2px; margin-right: auto; }
+  .paint { display: grid; place-items: center; width: 36px; padding: 0; border: 0; background: transparent; }
+  .paint span { width: 17px; height: 17px; border-radius: 50%; background: #e6bc35; }
+  .paint-1 span { background: #b32b2c; } .paint-2 span { background: #c5c9ca; } .paint-3 span { background: #304e68; }
+  .paint[aria-pressed="true"] span { outline: 1px solid #fff; outline-offset: 4px; }
+  .garage-status { color: #89949d; font-size: 10px; margin-top: 12px; min-height: 16px; }
+  @media(max-width:700px) { .garage-stage { height: 430px; } .stage-title { left: 20px; top: 22px; } .stage-index { right: 20px; top: 26px; } .stage-title strong { font-size: 34px; } .garage-toolbar { padding: 16px; } .paint-picker { flex-basis: 100%; margin-bottom: 4px; } }
+</style>

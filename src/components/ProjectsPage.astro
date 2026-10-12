@@ -1,22 +1,81 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GravityGardenPreview from './GravityGardenPreview.astro';
+import CatYardScene from './CatYardScene.astro';
 import { messages, pagePath, type Locale } from '../lib/i18n';
+import { projects, projectCatalog } from '../lib/projects';
 import { site } from '../lib/site';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
-const copy = messages[locale];
+const copy = projects[locale];
 ---
-
-<BaseLayout locale={locale} page="projects" title={`${copy.navigation.projects} — ${site.name}`} description={copy.projects.status}>
-  <main class="projects-placeholder shell" id="main-content">
-    <p class="eyebrow">{copy.navigation.projects}</p>
-    <h1>{copy.projects.status}</h1>
-    <a class="back-link" href={pagePath(locale)}>{copy.projects.back} <span aria-hidden="true">↗</span></a>
+<BaseLayout locale={locale} page="projects" title={`${messages[locale].navigation.projects} — ${site.name}`} description={copy.description}>
+  <main class="shell projects-main" id="main-content">
+    <header class="projects-intro">
+      <h1>{copy.title}</h1>
+      <p class="intro-description">{copy.description}</p>
+    </header>
+    <section class="project-section" aria-labelledby="coding-title">
+      <header class="section-heading">
+        <p class="eyebrow section-number">01 / CODING</p>
+        <h2 id="coding-title">{copy.codingTitle}</h2>
+        <p class="section-description">{copy.codingDescription}</p>
+      </header>
+      <div class="projects-empty"><p>{copy.inProgress}</p></div>
+    </section>
+    <section class="project-section" aria-labelledby="vibe-title">
+      <header class="section-heading">
+        <p class="eyebrow section-number">02 / VIBE CODING</p>
+        <h2 id="vibe-title">{copy.vibeTitle}</h2>
+        <p class="section-description">{copy.vibeDescription}</p>
+      </header>
+      <div class="project-grid">
+      {projectCatalog.map((project) => (
+        <a class="project-card" href={pagePath(locale, project.page)}>
+          <div class:list={['project-preview', { 'cat-preview': project.id === 'cat-yard' }]}>
+            {project.id === 'cat-yard' ? <CatYardScene preview /> : project.id === 'porsche-garage' ? <img class="porsche-preview" src="/images/porsche-preview.png" alt="" width="810" height="440" loading="lazy" /> : <GravityGardenPreview />}
+            {project.id === 'gravity-garden' && <span class="preview-label" aria-hidden="true">{project.label}</span>}
+          </div>
+          <div class="project-copy">
+            <p class="eyebrow">{project.category}</p>
+            <h3>{project.content[locale].name}</h3>
+            <p class="project-description">{project.content[locale].description}</p>
+            <ul aria-label={copy.tagsLabel}>{project.tags.map((tag) => <li>{tag}</li>)}</ul>
+            <div class="project-cta"><span>{copy.openDemo}</span><span class="circle-arrow" aria-hidden="true">↗</span></div>
+          </div>
+        </a>
+      ))}
+      </div>
+    </section>
   </main>
 </BaseLayout>
-
 <style>
-  .projects-placeholder { min-height: 65svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-block: 80px; text-align: center; }
-  h1 { margin-top: 24px; font-size: clamp(40px, 7vw, 88px); line-height: 1.2; letter-spacing: -.04em; text-wrap: balance; }
-  .back-link { gap: 12px; margin-top: 40px; }
+  .projects-main { padding-block: clamp(40px, 6vw, 80px) 100px; min-height: 75svh; }
+  .projects-intro { max-width: 850px; margin-bottom: clamp(48px, 6vw, 72px); }
+  h1 { font-size: clamp(44px, 6.5vw, 88px); line-height: 1.12; letter-spacing: -.045em; text-wrap: balance; }
+  .intro-description { max-width: 600px; margin-top: 24px; font-size: 18px; line-height: 1.8; }
+  .project-section { border-top: 1px solid var(--color-line); padding-top: 32px; }
+  .project-section + .project-section { margin-top: clamp(56px, 7vw, 88px); }
+  .section-heading { margin-bottom: 28px; }
+  .section-number { font-size: 10px; opacity: .75; }
+  .section-heading h2 { margin-top: 12px; font-size: clamp(30px, 4vw, 46px); letter-spacing: -.04em; }
+  .section-description { max-width: 650px; margin-top: 16px; font-size: 16px; line-height: 1.8; }
+  .projects-empty { display: grid; place-items: center; min-height: 160px; padding: 28px; border: 1px dashed var(--color-line); border-radius: 14px; background: #ffffff05; }
+  .projects-empty p { font-size: 18px; font-weight: 500; }
+  .project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .project-card { display: flex; flex-direction: column; overflow: hidden; background: #fff4dc; color: var(--color-ink); border-radius: 14px; transition: transform .25s, box-shadow .25s; }
+  .project-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px #441e2833; }
+  .project-preview { position: relative; overflow: hidden; aspect-ratio: 1.35; background: radial-gradient(ellipse at center, #132236, #090d18 75%); }
+  .cat-preview { display: flex; align-items: center; background: #faf1de; }
+  .porsche-preview { width: 100%; height: 100%; object-fit: cover; }
+  .preview-label { position: absolute; top: 22px; left: 24px; color: #aab6cb; font-size: 8px; letter-spacing: .16em; }
+  .project-copy { display: flex; flex-direction: column; flex: 1; padding: 28px; }
+  .project-copy .eyebrow { font-size: 10px; color: #7a554d; }
+  .project-copy h3 { margin-top: 10px; font-size: 32px; letter-spacing: -.04em; }
+  .project-description { margin-top: 14px; font-size: 15px; line-height: 1.8; }
+  ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+  li { border: 1px solid #25262826; border-radius: 5px; padding: 4px 8px; font-size: 10px; }
+  .project-cta { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 26px; margin-top: auto; font-size: 13px; font-weight: 700; }
+  @media (max-width: 1100px) { .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 700px) { .project-grid { grid-template-columns: minmax(0, 1fr); } .project-copy { padding: 24px; } }
 </style>

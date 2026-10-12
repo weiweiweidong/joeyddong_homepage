@@ -184,3 +184,13 @@ Photography 轮播改为居中浮层：桌面最大 1040×780px，视口周围�
 Home、Projects、Photography、Portfolio 使用共享 `AnimatedBackground.astro`，沿用首页渐变图形、动画节奏及手机适配。四类页面默认开启动画；Projects、Photography、Portfolio 不显示动画开关，Home 保留现有开关。共享半透明导航与背景层级同步应用。已通过 Astro 检查、静态构建及十二个三语页面的输出检查。本次仅本地修改，未提交、推送或部署。
 
 Photography 第 69 张照片修复：其原文件名 `20211030-DSC01103 2.jpg` 含空格，预览链接通过 URL API 编码后再生成 srcset，避免空格被当作响应式图片描述符分隔符。原图地址及编号保持不变。
+
+## 2026-10-13 Projects 与三个 Demo
+
+用户确认 Projects 在当前主站仓库内维护，采用上下两个区块：上方“我的 Coding 项目”，以手动实现为主，内容暂为“制作中”；下方“Vibe Coding 测试”，通过项目卡片进入各自独立的 Demo 页面。首屏使用“动手做点东西。”及朴素介绍，删除原装饰小标题。
+
+已实现引力花园、小猫的院子、保时捷车库三个 Demo，分别位于 `/projects/gravity-garden/`、`/projects/cat-yard/`、`/projects/porsche-garage/`，均有 `/zh/` 与 `/ja/` 版本。Demo 保留项目导航高亮、返回列表、三语切换及正确 canonical。列表使用静态封面，3D 依赖和模型仅在车库页面加载。
+
+保时捷使用 CC BY 4.0 的经典 911 Turbo 模型，保留 Karol Miklas / Lionsharp Studios 署名，模型与贴图已本地优化，左右车门已独立拆分；源版本、许可证和变更记录在素材目录。素材处理脚本可通过 `npm run porsche:prepare` 复用。桌面及手机交互、模型完整性、Astro 检查与静态构建已验证；构建产生 22 个页面。
+
+用户现已明确授权使用中文提交说明提交当前改动、推送 GitHub，并部署主站；此前“仅本地制作、不提交或部署”的记录描述当时状态，不再限制本次发布。

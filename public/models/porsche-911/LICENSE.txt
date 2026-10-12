@@ -1,0 +1,8 @@
+FREE 1975 Porsche 911 (930) Turbo
+Model by Karol Miklas / Lionsharp Studios
+License: Creative Commons Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+https://sketchfab.com/3d-models/free-1975-porsche-911-930-turbo-8568d9d14a994b9cae59499f0dbed21e
+Vehicle design: Porsche AG.
+Source mirror: https://github.com/UtkarshPathrabe/Porche-911-930-Turbo-1975-3D-Model/tree/68212641044e54ca04de3a0cfb7e609c814aff15
+Changes: textures resized and compressed; doors separated for animation.
