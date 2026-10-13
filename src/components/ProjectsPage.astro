@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import GravityGardenPreview from './GravityGardenPreview.astro';
 import CatYardScene from './CatYardScene.astro';
 import { messages, pagePath, type Locale } from '../lib/i18n';
-import { projects, projectCatalog } from '../lib/projects';
+import { projects, projectCatalog, codingProjects } from '../lib/projects';
 import { site } from '../lib/site';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -21,7 +21,23 @@ const copy = projects[locale];
         <h2 id="coding-title">{copy.codingTitle}</h2>
         <p class="section-description">{copy.codingDescription}</p>
       </header>
-      <div class="projects-empty"><p>{copy.inProgress}</p></div>
+      <div class="project-grid">
+        {codingProjects.map((project) => (
+          <a class="project-card" href={pagePath(locale, project.page)}>
+            <div class="project-preview fade-preview">
+              <img src={project.preview.original} alt="" width={project.preview.width} height={project.preview.height} loading="lazy" />
+              <span class="fade-preview-label" aria-hidden="true">FADE <strong>{project.preview.score.toFixed(4)}</strong></span>
+            </div>
+            <div class="project-copy">
+              <p class="eyebrow">{project.content[locale].badge}</p>
+              <h3>{project.content[locale].name}</h3>
+              <p class="project-description">{project.content[locale].description}</p>
+              <ul aria-label={copy.tagsLabel}>{project.tags.map(tag => <li>{tag}</li>)}</ul>
+              <div class="project-cta"><span>{project.content[locale].openProject}</span><span class="circle-arrow" aria-hidden="true">↗</span></div>
+            </div>
+          </a>
+        ))}
+      </div>
     </section>
     <section class="project-section" aria-labelledby="vibe-title">
       <header class="section-heading">
@@ -60,8 +76,9 @@ const copy = projects[locale];
   .section-number { font-size: 10px; opacity: .75; }
   .section-heading h2 { margin-top: 12px; font-size: clamp(30px, 4vw, 46px); letter-spacing: -.04em; }
   .section-description { max-width: 650px; margin-top: 16px; font-size: 16px; line-height: 1.8; }
-  .projects-empty { display: grid; place-items: center; min-height: 160px; padding: 28px; border: 1px dashed var(--color-line); border-radius: 14px; background: #ffffff05; }
-  .projects-empty p { font-size: 18px; font-weight: 500; }
+  .fade-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .fade-preview-label { position: absolute; bottom: 18px; left: 20px; padding: 10px 14px; border-radius: 8px; background: #fff4dcee; color: var(--color-ink); font-size: 10px; letter-spacing: .08em; }
+  .fade-preview-label strong { display: block; font-size: 26px; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
   .project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
   .project-card { display: flex; flex-direction: column; overflow: hidden; background: #fff4dc; color: var(--color-ink); border-radius: 14px; transition: transform .25s, box-shadow .25s; }
   .project-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px #441e2833; }

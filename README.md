@@ -48,7 +48,7 @@ Set the Cloudflare production **build** variable to `PUBLIC_BLOG_URL=https://blo
 
 ## Subsites
 
-Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects opens a local card index with two sections: hand-written Coding projects (currently “Work in progress”) and Vibe Coding demos. Each demo has a separate localized page. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
+Blog, Projects, and Photography are planned as independent projects. Their links are centralized in `src/lib/site.ts`; external links carry a `lang` query parameter. Projects opens a local card index with two sections: hand-written Coding projects, including FADE fog density evaluation, and Vibe Coding demos. Each project has a separate localized page. Photography opens a local gallery with 78 original photographs, rewritten copy in three languages, and an accessible image viewer.
 
 Blog defaults to `blog.joeyddong.top`. Projects and Photography always open localized `/projects/` and `/photography/` pages within this site. Their links are not overridden by environment variables. The old GitHub Pages blog has been retired. Use `PUBLIC_BLOG_URL` in a local `.env` file to override the Blog URL when needed.
 
@@ -58,6 +58,7 @@ Copy `.env.example` to `.env` to point links to other local development servers.
 
 - `src/lib/photography.ts`: 78 original photo URLs and Photography copy in three languages. Images stay on the original OSS service; responsive WebP previews and lazy loading reduce transfers, and the viewer links to unchanged original URLs.
 - `src/lib/i18n.ts`: shared interface translations; `src/lib/portfolio.ts`: approved Portfolio content in three languages.
+- `src/lib/fade-py.ts`: FADE project copy, algorithm explanation and language-specific technical documentation links; `src/lib/fade-examples.json`: verified scores, image dimensions, shared heatmap scale and asset hashes.
 - `src/lib/site.ts`: external links and portrait filename.
 - `src/styles/global.css`: shared colors, typography, spacing, and responsive layouts.
 - `src/components/HomePage.astro`: homepage sections.
@@ -86,3 +87,9 @@ Projects has three interactive demos, each available in English, Chinese, and Ja
 The index uses static covers; Three.js and the car model load only on the garage demo. Demo motion respects reduced-motion preferences and pauses rendering when hidden. Shared site background behavior remains as documented above.
 
 Card content is maintained in `src/lib/projects.ts`; demo copy lives in the corresponding locale files. The Porsche model is attributed to Karol Miklas / Lionsharp Studios under CC BY 4.0, with source and modifications recorded in `public/models/porsche-911/LICENSE.txt` and linked on the demo. The optimized model is committed so builds do not need to download it. To regenerate its textures and independent door geometry, run `npm run porsche:prepare` (requires network access; source revision is pinned).
+
+## FADE Coding project (2026-10-14)
+
+`/projects/fade-py/` and its `/zh/` and `/ja/` versions introduce the FADE paper, the Python implementation, twelve perceptual features and a six-stage computation flow. The page explains the separate whole-image score and local heatmap calculations, and the implementation's covariance proxy relative to the paper's model. Each language links to the matching technical document at the verified documentation revision.
+
+Three original repository images and their precomputed grayscale heatmaps are served locally. Buttons switch the image, score and map together; no Python inference or image upload runs in the website. Scores are verified as 0.9113, 2.7122 and 5.7674, and all maps use the same numeric display scale with a distinct mark for invalid patches. Asset provenance and the offline regeneration command for `scripts/prepare-fade-examples.py` are documented in `docs/ASSETS.md`.

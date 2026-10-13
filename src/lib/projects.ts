@@ -1,6 +1,7 @@
 import type { Locale } from './i18n';
 import { catYardCopy } from './cat-yard-copy';
 import { porscheCopy } from './porsche-copy';
+import { fadeCopy, fadeTags, fadeExamples } from './fade-py';
 const en = {
   title: 'Making things.',
   description: 'Some projects I’ve made: a mix of code I write myself and small demos I try out with vibe coding.',
@@ -47,6 +48,10 @@ export const projects = {
   },
 } satisfies Record<Locale, typeof en>;
 export type ProjectCopy = typeof en;
+
+export const codingProjects = [
+  { id: 'fade-py', page: 'projects/fade-py', tags: fadeTags, content: fadeCopy, preview: fadeExamples.examples[1] },
+] as const;
 
 export const projectCatalog = [
   { id: 'gravity-garden', page: 'projects/gravity-garden', category: 'VIBE CODING', label: 'GRAVITY GARDEN / 001', tags: ['Canvas 2D', 'Generative art'], content: {

@@ -1,0 +1,50 @@
+{
+  "sourceCommit": "50643c5a5468171ebf399108aaa7052d0c57d015",
+  "scaleMin": 0,
+  "scaleMax": 20.247848320176296,
+  "invalidColor": "#cf4c93",
+  "examples": [
+    {
+      "id": "sample-1",
+      "sourceFile": "test_image1.png",
+      "original": "/images/fade-py/sample-1.png",
+      "map": "/images/fade-py/density-1.png",
+      "score": 0.9113393845241384,
+      "width": 576,
+      "height": 768,
+      "mapWidth": 72,
+      "mapHeight": 96,
+      "invalidPatches": 2,
+      "sourceSha256": "2ba75900ab2ece7eae88be4bcafffe1313b450c7777ea013c9e7a56ee8aaa7dc",
+      "mapSha256": "b9c318d11414dced63d87c05a7dcafe8b345dfa4264e22756b42bb7f629675cb"
+    },
+    {
+      "id": "sample-2",
+      "sourceFile": "test_image2.JPG",
+      "original": "/images/fade-py/sample-2.jpg",
+      "map": "/images/fade-py/density-2.png",
+      "score": 2.7121977530723784,
+      "width": 600,
+      "height": 800,
+      "mapWidth": 75,
+      "mapHeight": 100,
+      "invalidPatches": 7,
+      "sourceSha256": "939da467dd50493b1bd37c14edf7f0f206c6c9465d014b6896c188a89ea6d679",
+      "mapSha256": "0ecbdb18bb8cfc027503da95eb9d4aa8d5142f5203a9097afa1c1ed7ccb2866b"
+    },
+    {
+      "id": "sample-3",
+      "sourceFile": "test_image3.jpg",
+      "original": "/images/fade-py/sample-3.jpg",
+      "map": "/images/fade-py/density-3.png",
+      "score": 5.767438622699199,
+      "width": 800,
+      "height": 531,
+      "mapWidth": 100,
+      "mapHeight": 66,
+      "invalidPatches": 0,
+      "sourceSha256": "3ebe294975c64b3f8e6c1fa6d85f15f83a9cd6b36056f7f773288eb049fd894d",
+      "mapSha256": "f21992a494bf9aa1f5f0bbdda3d205d573940d5bb14115c4cd390ab41983a371"
+    }
+  ]
+}
