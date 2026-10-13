@@ -98,12 +98,12 @@ export function photoPreview(url: string, width: number) {
 
 export const photography = {
   "en": {
-    "title": "The world, through my lens.",
-    "description": "Photographs by JoeyDDong. Streets, everyday discoveries, and moments worth keeping.",
-    "intro": "I’m an amateur photography enthusiast, and this is a collection of my photographs. In my spare time, nothing brings me more joy than wandering through streets and alleys with my camera, capturing those fleeting moments of beauty in everyday life. Each frame is a unique encounter, documenting the world through my lens.",
-    "note": "It makes me so happy when friends tell me they use my photos as phone wallpapers. The scenes that made me stop and look have become a small part of their everyday lives, too. I’d love to share that happiness with you, here on this page.",
+    "title": "My Photos",
+    "description": "Photographs by JoeyDDong.",
+    "intro": "I’m an amateur photography enthusiast, and this is a collection of my photographs. In my spare time, I like walking through streets and alleys with my camera and photographing things I find beautiful. These photos show the world as I see it.",
+    "note": "When friends tell me they’re using my photos as phone wallpapers, it makes me really happy. I’d like to share that happiness with you, too.",
     "browse": "Browse the photographs",
-    "collection": "A collection of moments.",
+    "collection": "Photographs",
     "count": "photographs",
     "hint": "Choose a photograph to view it larger.",
     "photo": "Photograph",
@@ -115,15 +115,15 @@ export const photography = {
     "quote": "In life, we are passers-by; in photographs, we are collectors of past moments.",
     "back": "Back to Home",
     "welcome": "Thank you for visiting this page.",
-    "invitation": "I’d love to show you the world as I see it!"
+    "invitation": "I’d like to show you the world as I see it!"
   },
   "zh": {
-    "title": "把我眼中的世界，分享给你。",
-    "description": "JoeyDDong 的摄影作品：街头漫步、日常发现，以及值得留下的瞬间。",
-    "intro": "我是一名业余摄影爱好者，这里收录了我的一些摄影作品。闲暇时光，我最享受的莫过于背着相机漫步街头巷尾，用镜头捕捉生活中那些稍纵即逝的美好瞬间。每一帧都是一次独特的邂逅，记录着我眼中的世界。",
-    "note": "当朋友们告诉我，他们正在使用我拍的照片作为手机壁纸时，我真的非常开心。那些让我停下脚步的风景，也成为了他们日常生活的一部分。我也很乐意和屏幕前的你分享这份喜悦。",
+    "title": "我的照片",
+    "description": "JoeyDDong 的摄影作品。",
+    "intro": "我是一名业余摄影爱好者，这里收录了我的一些摄影作品。闲暇的时候，我喜欢背着相机在街头巷尾走走，拍下生活中那些让我觉得好看的画面。这些照片记录着我眼中的世界。",
+    "note": "当朋友们告诉我，他们在用我拍的照片当手机壁纸时，我真的很开心。我也很乐意和屏幕前的你分享这份开心。",
     "browse": "浏览摄影作品",
-    "collection": "收藏日常的片刻。",
+    "collection": "摄影作品",
     "count": "张照片",
     "hint": "点击照片，放大看一看。",
     "photo": "摄影作品",
@@ -138,12 +138,12 @@ export const photography = {
     "invitation": "我想把我眼中的世界展示给你看！"
   },
   "ja": {
-    "title": "私の目に映る世界を、あなたにも。",
-    "description": "JoeyDDong の写真。街歩き、日々の発見、残しておきたい瞬間。",
-    "intro": "趣味で写真を撮っていて、ここに私の作品をまとめてみました。休みの日は、カメラを持って街をぶらぶら歩くのが大好きです。日々の暮らしの中で「キレイだな」と思う、すぐに過ぎ去ってしまう瞬間を写真に残しています。一枚一枚には、私が出会った特別な場面と、私の目に映った世界が詰まっています。",
-    "note": "友だちが「あなたの写真をスマホの壁紙にしているよ」と教えてくれたとき、本当に嬉しかったです。私が足を止めた景色が、誰かの日常の一部にもなっている。その喜びを、今このページを読んでいるあなたとも分かち合えたら嬉しいです。",
+    "title": "私の写真",
+    "description": "JoeyDDong の写真。",
+    "intro": "趣味で写真を撮っています。ここには、これまでに撮った写真をいくつか載せています。時間があるときは、カメラを持って街を歩き、きれいだなと思った景色を撮るのが好きです。写真には、私の目に映った世界が残っています。",
+    "note": "友だちが「写真をスマホの壁紙にしているよ」と教えてくれると、本当に嬉しくなります。このページを見ているあなたにも、そんな写真を楽しんでもらえたら嬉しいです。",
     "browse": "写真を見る",
-    "collection": "日々のひとこまを集めて。",
+    "collection": "写真",
     "count": "枚の写真",
     "hint": "写真を選ぶと、大きく表示できます。",
     "photo": "写真",
@@ -155,6 +155,6 @@ export const photography = {
     "quote": "人生では、私たちは通りすがりの旅人。写真では、私たちは過ぎ去った時の収集家。",
     "back": "ホームへ戻る",
     "welcome": "このページをご覧いただき、ありがとうございます。",
-    "invitation": "私が見つけた素敵な世界を、あなたにも見てもらいたいです！"
+    "invitation": "私の目に映る世界を、あなたにも見てもらいたいです！"
   }
 } satisfies Record<Locale, Record<string, string>>;

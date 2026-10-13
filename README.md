@@ -61,7 +61,7 @@ Copy `.env.example` to `.env` to point links to other local development servers.
 - `src/lib/site.ts`: external links and portrait filename.
 - `src/styles/global.css`: shared colors, typography, spacing, and responsive layouts.
 - `src/components/HomePage.astro`: homepage sections.
-- `src/components/PortfolioPage.astro`: personal portrait, introduction, education, exploration, interests, and GitHub contact.
+- `src/components/PortfolioPage.astro`: personal portrait, introduction, education, programming and work, photography, writing, and GitHub contact.
 
 The portrait is a temporary sample image, not the owner's photograph. Its source and replacement instructions are recorded in `docs/ASSETS.md`. The site references a local copy and loads no external fonts or image services at runtime.
 
@@ -69,7 +69,7 @@ The portrait is a temporary sample image, not the owner's photograph. Its source
 
 ## Portfolio update (2026-10-13)
 
-Portfolio uses the approved Chinese, English, and Japanese content and a local copy of the owner’s old About portrait. Only the Home portrait remains a temporary sample. Use `npm ci` with the committed `package-lock.json`; no production settings or deployment were changed by this local update.
+Portfolio uses the approved Chinese, English, and Japanese content and a local copy of the owner’s old About portrait. The revised copy introduces the owner’s work as a data scientist, C++ and Python use, continued algorithm practice, photography, and blog notes. Three cards cover programming, data science, and algorithms; the AI-assisted development card was removed. Use `npm ci` with the committed `package-lock.json`; no production settings or deployment were changed by this local update.
 
 ## Shared animated background
 
