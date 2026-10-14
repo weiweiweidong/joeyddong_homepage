@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { type Locale } from '../lib/i18n';
-import { photos, photography, photoPreview } from '../lib/photography';
+import { photos, photography, photoSrcset } from '../lib/photography';
 import { site } from '../lib/site';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -20,10 +20,10 @@ const copy = photography[locale];
       </div>
       <div class="photography-cover">
         <div class="photography-cover-frame photography-cover-frame-back" aria-hidden="true">
-          <img src={photoPreview(photos[2].url, 640)} width="3753" height="7922" alt="" decoding="async" />
+          <img src={photos[2].previews["640"].src} srcset={photoSrcset(photos[2])} sizes="(max-width: 700px) 196px, 261px" width={photos[2].width} height={photos[2].height} alt="" decoding="async" />
         </div>
         <div class="photography-cover-frame">
-          <img src={photoPreview(photos[0].url, 640)} width="3054" height="6447" alt={`${copy.photo} 01`} fetchpriority="high" />
+          <img src={photos[0].previews["640"].src} srcset={photoSrcset(photos[0])} sizes="(max-width: 700px) 196px, 261px" width={photos[0].width} height={photos[0].height} alt={`${copy.photo} 01`} fetchpriority="high" />
         </div>
       </div>
     </section>
@@ -34,8 +34,8 @@ const copy = photography[locale];
       <div class="photo-grid">
         {photos.map((photo) => (
           <figure class="photo-item">
-            <a class="photo-link" href={photo.url} data-photo-id={photo.id} aria-label={`${copy.view} ${photo.id}`}>
-              <img src={photoPreview(photo.url, 640)} srcset={`${photoPreview(photo.url, 320)} 320w, ${photoPreview(photo.url, 640)} 640w, ${photoPreview(photo.url, 960)} 960w`} sizes="(max-width: 480px) calc(100vw - 48px), (max-width: 700px) 44vw, (max-width: 1000px) 28vw, 22vw" alt={`${copy.photo} ${String(photo.id).padStart(2, '0')}`} width="900" height="1900" loading="lazy" decoding="async" />
+            <a class="photo-link" href={photo.url} data-photo-id={photo.id} data-preview={photo.previews["640"].src} data-thumbnail={photo.previews["320"].src} data-width={photo.width} data-height={photo.height} aria-label={`${copy.view} ${photo.id}`}>
+              <img src={photo.previews["640"].src} srcset={photoSrcset(photo)} sizes="(max-width: 480px) calc(100vw - 48px), (max-width: 700px) calc((100vw - clamp(24px, 4.6vw, 64px) - clamp(24px, 4.6vw, 64px) - 16px) / 2), (max-width: 1000px) calc((100vw - 9.2vw - 48px) / 3), (min-width: 1400px) 294px, calc((min(100vw, 1376px) - clamp(24px, 4.6vw, 64px) - clamp(24px, 4.6vw, 64px) - 72px) / 4)" alt={`${copy.photo} ${String(photo.id).padStart(2, '0')}`} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
             </a>
           </figure>
         ))}
@@ -43,7 +43,7 @@ const copy = photography[locale];
     </section>
     <div class="photography-outro"><p>{copy.quote}</p></div>
   </main>
-  <dialog class="photo-viewer" aria-label={copy.view}>
+  <dialog class="photo-viewer" aria-label={copy.view} data-loading={copy.loading} data-error={copy.loadError}>
     <img class="photo-viewer-ambient" alt="" aria-hidden="true" />
     <div class="photo-viewer-toolbar">
       <div class="photo-viewer-heading"><span>Photography</span><p class="photo-viewer-count" aria-live="polite"></p></div>
@@ -64,12 +64,14 @@ const copy = photography[locale];
       <div class="photo-filmstrip" role="group" aria-label={copy.collection}>
         {Array.from({ length: 7 }, () => <button type="button" class="photo-thumbnail"><img alt="" draggable="false" /></button>)}
       </div>
+      <div class="photo-viewer-feedback"><span class="photo-hd-status" role="status" aria-live="polite"></span><button class="photo-hd-retry" type="button" hidden>{copy.retry}</button></div>
       <a class="photo-viewer-original" target="_blank" rel="noopener noreferrer">{copy.original} ↗</a>
     </div>
   </dialog>
 </BaseLayout>
 
 <script>
+  import { chooseHighResolutionEdge, highResolutionUrl, createPhotoLoader } from '../lib/photography-loader';
   const viewer = document.querySelector<HTMLDialogElement>('.photo-viewer');
   const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.photo-link'));
   const carousel = viewer?.querySelector<HTMLElement>('.photo-carousel');
@@ -80,20 +82,53 @@ const copy = photography[locale];
   const original = viewer?.querySelector<HTMLAnchorElement>('.photo-viewer-original');
   const ambient = viewer?.querySelector<HTMLImageElement>('.photo-viewer-ambient');
   const thumbnails = Array.from(viewer?.querySelectorAll<HTMLButtonElement>('.photo-thumbnail') ?? []);
+  const status = viewer?.querySelector<HTMLElement>('.photo-hd-status');
+  const retry = viewer?.querySelector<HTMLButtonElement>('.photo-hd-retry');
+  const loader = createPhotoLoader();
+  let scheduled = 0;
+  const clearRequest = () => {
+    cancelAnimationFrame(scheduled);
+    loader.invalidate();
+    if (status) status.textContent = '';
+    if (retry) retry.hidden = true;
+  };
   let current = 0;
   let opener: HTMLAnchorElement | undefined;
+  const loadCurrent = () => {
+    if (!viewer?.open || !carousel || !images[1] || transition) return;
+    const link = links[current];
+    const edge = chooseHighResolutionEdge(Number(link.dataset.width), Number(link.dataset.height), carousel.clientWidth, carousel.clientHeight, window.devicePixelRatio);
+    const url = highResolutionUrl(link.href, edge);
+    if (status) status.textContent = viewer.dataset.loading ?? '';
+    if (retry) retry.hidden = true;
+    loader.load(url, result => {
+      images[1].src = result;
+      if (status) status.textContent = '';
+    }, () => {
+      if (status) status.textContent = viewer.dataset.error ?? '';
+      if (retry) retry.hidden = false;
+    });
+  };
+  const scheduleCurrent = () => {
+    cancelAnimationFrame(scheduled);
+    scheduled = requestAnimationFrame(loadCurrent);
+  };
+  retry?.addEventListener('click', loadCurrent);
   const show = (index: number) => {
+    clearRequest();
     current = (index + links.length) % links.length;
     const link = links[current];
     if (!counter || !original || !link) return;
     images.forEach((image, slot) => {
       const slide = links[(current + slot - 1 + links.length) % links.length];
-      image.src = `${slide.href}?x-oss-process=image/resize,w_1600/format,webp`;
+      image.src = slide.dataset.preview ?? '';
+      image.width = Number(slide.dataset.width);
+      image.height = Number(slide.dataset.height);
       image.alt = slot === 1 ? slide.querySelector('img')?.alt ?? '' : '';
     });
     counter.textContent = `${String(current + 1).padStart(2, '0')} / ${links.length}`;
     original.href = link.href;
-    if (ambient) ambient.src = `${link.href}?x-oss-process=image/resize,w_320/format,webp`;
+    if (ambient) ambient.src = link.dataset.thumbnail ?? '';
     thumbnails.forEach((button, slot) => {
       const index = (current + slot - 3 + links.length) % links.length;
       const slide = links[index];
@@ -101,11 +136,13 @@ const copy = photography[locale];
       button.setAttribute('aria-label', slide.getAttribute('aria-label') ?? '');
       button.setAttribute('aria-current', slot === 3 ? 'true' : 'false');
       const thumb = button.querySelector('img');
-      if (thumb) thumb.src = `${slide.href}?x-oss-process=image/resize,w_112/format,webp`;
+      if (thumb) thumb.src = slide.dataset.thumbnail ?? '';
     });
+    if (viewer?.open) scheduleCurrent();
   };
   const move = (direction: number) => {
     if (!viewer?.open || !track || transition) return;
+    clearRequest();
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       show(current + direction);
       return;
@@ -147,6 +184,7 @@ const copy = photography[locale];
     show(index);
     viewer.showModal();
     document.body.classList.add('photo-viewer-open');
+    scheduleCurrent();
   }));
   viewer?.querySelector('.photo-viewer-close')?.addEventListener('click', () => viewer.close());
   viewer?.querySelector('.photo-viewer-previous')?.addEventListener('click', () => move(-1));
@@ -159,6 +197,7 @@ const copy = photography[locale];
   });
   viewer?.addEventListener('click', (event) => { if (event.target === viewer) viewer.close(); });
   viewer?.addEventListener('close', () => {
+    clearRequest();
     document.body.classList.remove('photo-viewer-open');
     transition?.cancel();
     transition = undefined;

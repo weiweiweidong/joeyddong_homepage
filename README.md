@@ -56,7 +56,7 @@ Copy `.env.example` to `.env` to point links to other local development servers.
 
 ## Editing content and design
 
-- `src/lib/photography.ts`: 78 original photo URLs and Photography copy in three languages. Images stay on the original OSS service; responsive WebP previews and lazy loading reduce transfers, and the viewer links to unchanged original URLs.
+- `src/lib/photography.ts`: Photography copy and the prepared preview manifest. Original URLs and order live in `src/lib/photography-sources.json`. The list uses local WebP images; the viewer requests only the current screen-sized HD image from OSS. Maintenance and measured results: `docs/PHOTOGRAPHY_PERFORMANCE.md`.
 - `src/lib/i18n.ts`: shared interface translations; `src/lib/portfolio.ts`: approved Portfolio content in three languages.
 - `src/lib/fade-py.ts`: FADE project copy, algorithm explanation and language-specific technical documentation links; `src/lib/fade-examples.json`: verified scores, image dimensions, shared heatmap scale and asset hashes.
 - `src/lib/site.ts`: external links and portrait filename.
@@ -64,7 +64,7 @@ Copy `.env.example` to `.env` to point links to other local development servers.
 - `src/components/HomePage.astro`: homepage sections.
 - `src/components/PortfolioPage.astro`: personal portrait, introduction, education, programming and work, photography, writing, and GitHub contact.
 
-The portrait is a temporary sample image, not the owner's photograph. Its source and replacement instructions are recorded in `docs/ASSETS.md`. The site references a local copy and loads no external fonts or image services at runtime.
+The portrait is a temporary sample image, not the owner's photograph. Its source and replacement instructions are recorded in `docs/ASSETS.md`. Portrait assets are local and no external fonts are loaded. Photography contacts OSS only when opening the current HD image or the original-image link.
 
 `PROJECT_CONTEXT.md` records the current requirements, confirmed design direction, implementation status, and remaining decisions.
 
@@ -93,3 +93,9 @@ Card content is maintained in `src/lib/projects.ts`; demo copy lives in the corr
 `/projects/fade-py/` and its `/zh/` and `/ja/` versions introduce the FADE paper, the Python implementation, twelve perceptual features and a six-stage computation flow. The page explains the separate whole-image score and local heatmap calculations, and the implementation's covariance proxy relative to the paper's model. Each language links to the matching technical document at the verified documentation revision.
 
 Three original repository images and their precomputed grayscale heatmaps are served locally. Buttons switch the image, score and map together; no Python inference or image upload runs in the website. Scores are verified as 0.9113, 2.7122 and 5.7674, and all maps use the same numeric display scale with a distinct mark for invalid patches. Asset provenance and the offline regeneration command for `scripts/prepare-fade-examples.py` are documented in `docs/ASSETS.md`.
+
+## Photography preview preparation
+
+After adding or changing source photographs, run `npm run photography:prepare` once with network access. It downloads only resized 320/640/960px WebP images, validates full decoding with sharp, and atomically publishes the local files and manifest. Unchanged valid images are reused. Keep the generated `public/images/photography/` files and `src/lib/photography-assets.json` with the source; normal builds and deployments do not regenerate images or require OSS access.
+
+Run `npm run photography:test` to check HD sizing, stale-request protection, failures, retry, closing, and reuse. The viewer uses local previews while loading and never preloads neighboring HD photos. “Open original image” retains the unchanged original URL.

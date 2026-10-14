@@ -32,3 +32,9 @@ PYTHONDONTWRITEBYTECODE=1 /absolute/path/to/fade_py/.venv/bin/python scripts/pre
 论文正式出处已核对作者提供的 PDF，题名为 *Referenceless Prediction of Perceptual Fog Density and Perceptual Image Defogging*，作者 Lark Kwon Choi、Jaehee You、Alan Conrad Bovik，IEEE Transactions on Image Processing, 24(11), 3888–3901, November 2015，DOI [10.1109/TIP.2015.2456502](https://doi.org/10.1109/TIP.2015.2456502)。页面提供 DOI 正式出版入口及 [作者公开的论文 PDF](https://utw10503.utweb.utexas.edu/publications/2015/LarkKwonChoi_TIP_2015_Referenceless_Prediction_of_Perceptual_Fog_Density_and_Perceptual_Image_Defogging.pdf)，修正早期仓库 README 中的题名错误。
 
 技术说明内容与链接现使用新版文档提交 `dc68df29112521a8a1c0e1e1d9f1374bd485cf83`；该提交仅更新三语技术文档，算法代码仍为上述示例计算基线。文档链接按中／英／日语言选择 `technical_documentation.md`、`technical_documentation_EN.md`、`technical_documentation_JA.md`。本次未重新生成原图、热力图或修改结果清单。
+
+## 2026-10-14 Photography 本地小图（当前实现）
+
+列表和首屏使用 `public/images/photography/` 中的本地 WebP，覆盖 78 张照片，每张有 320、640、960px 三档，质量 75。来源清单在 `src/lib/photography-sources.json`，生成的真实宽高、大小和路径记录在 `src/lib/photography-assets.json`。用 `npm run photography:prepare` 维护，构建不联网生成。此前直接引用 OSS 小图的描述为历史记录。
+
+轮播的背景、缩略图和前后滑动缓冲也使用本地小图；仅当前选中照片请求 OSS 屏幕适配高清图，原图入口继续使用原 URL。详细维护与验收数据见 `PHOTOGRAPHY_PERFORMANCE.md`。

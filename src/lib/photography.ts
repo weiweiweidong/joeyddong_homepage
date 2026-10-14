@@ -1,103 +1,26 @@
 import type { Locale } from './i18n';
+import sources from './photography-sources.json';
+import assets from './photography-assets.json';
 
-// Original URLs and numbering from https://joeyddong.top/photos/.
-const baseUrl = 'https://my-markdown-picture-bedding.oss-ap-northeast-1.aliyuncs.com/uPic/2024-12-14/';
-const filenames = [
-  "20240804-DSC07179.jpg",
-  "20230124-DSC01653.jpg",
-  "20221127-DSC00820.jpg",
-  "20221127-DSC00703.jpg",
-  "20221127-DSC00402.jpg",
-  "20211218-DSC_2129.jpg",
-  "20211123-DSC_1931.jpg",
-  "20240720-DSC07097.jpg",
-  "20240629-DSC06654.jpg",
-  "20240629-DSC06624.jpg",
-  "20240614-DSC06338.jpg",
-  "20240517-DSC06267.jpg",
-  "20240517-DSC06240.jpg",
-  "20240517-DSC06231.jpg",
-  "20240515-DSC06168.jpg",
-  "20231122-DSC05752.jpg",
-  "20230625-DSC03711.jpg",
-  "20230625-DSC03683.jpg",
-  "20230625-DSC03665.jpg",
-  "20230618-DSC03545.jpg",
-  "20230618-DSC03424.jpg",
-  "20230529-DSC03304.jpg",
-  "20230529-DSC03272.jpg",
-  "20230529-DSC03265.jpg",
-  "20230526-DSC03238.jpg",
-  "20230526-DSC03200.jpg",
-  "20230327-DSC03071.jpg",
-  "20230327-DSC03049.jpg",
-  "20230304-DSC03033.jpg",
-  "20230304-DSC02957.jpg",
-  "20230124-DSC01453.jpg",
-  "20221202-DSC01001.jpg",
-  "20230618-DSC03524.jpg",
-  "20221118-DSC09934.jpg",
-  "20221118-DSC09777.jpg",
-  "20221118-DSC09747.jpg",
-  "20221105-DSC09441.jpg",
-  "20221028-DSC09178.jpg",
-  "20221028-DSC09153.jpg",
-  "20220925-DSC07607.jpg",
-  "20220925-DSC07550.jpg",
-  "20220925-DSC07514.jpg",
-  "20220925-DSC07446.jpg",
-  "20220724-DSC06460.jpg",
-  "20220724-DSC06430.jpg",
-  "20220723-DSC06285.jpg",
-  "20220626-DSC06204.jpg",
-  "20220504-DSC05750.jpg",
-  "20220503-DSC05238.jpg",
-  "20220503-DSC05194.jpg",
-  "20220503-DSC05184.jpg",
-  "20220503-DSC05129.jpg",
-  "20220503-DSC04977.jpg",
-  "20220402-DSC03836.jpg",
-  "20220402-DSC03673.jpg",
-  "20220402-DSC03513.jpg",
-  "20220329-DSC03222.jpg",
-  "20230618-DSC03522.jpg",
-  "20220329-DSC03153.jpg",
-  "20220321-DSC02228.jpg",
-  "20220121-DSC01966.jpg",
-  "20220121-DSC01937.jpg",
-  "20211218-DSC_2110.jpg",
-  "20211209-DSC01671.jpg",
-  "20211123-DSC_2064.jpg",
-  "20211123-DSC_2027.jpg",
-  "20211123-DSC_1948.jpg",
-  "20211114-DSC01481.jpg",
-  "20211030-DSC01103 2.jpg",
-  "20211030-DSC01095.jpg",
-  "20211028-DSC01014.jpg",
-  "20190907-DSC06522.jpg",
-  "20190105-DSC07052.jpg",
-  "20200508-DSC08024-2.jpg",
-  "20230128-DSC02566.jpg",
-  "20230127-DSC02554.jpg",
-  "20230124-DSC01671.jpg",
-  "20230124-DSC01601.jpg"
-] as const;
+// Originals keep the user-provided URLs. Only prepared local previews render in the list.
+export const photos = sources.filenames.map((filename, index) => {
+  const asset = assets[index];
+  const url = sources.baseUrl + filename;
+  if (!asset || asset.id !== index + 1 || asset.original !== url) {
+    throw new Error(`Missing previews for photo ${index + 1}. Run npm run photography:prepare.`);
+  }
+  return { id: index + 1, url, width: asset.variants['960'].width, height: asset.variants['960'].height, previews: asset.variants };
+});
 
-export const photos = filenames.map((filename, index) => ({
-  id: index + 1,
-  url: baseUrl + filename,
-}));
-
-// OSS resizes the existing image for display; the original link stays unchanged.
-export function photoPreview(url: string, width: number) {
-  // A literal space breaks srcset parsing (photo 69 has one in its filename).
-  const preview = new URL(url);
-  preview.searchParams.set('x-oss-process', `image/resize,w_${width}/format,webp`);
-  return preview.href;
+export function photoSrcset(photo: (typeof photos)[number]) {
+  return [photo.previews['320'], photo.previews['640'], photo.previews['960']].map(image => `${image.src} ${image.width}w`).join(', ');
 }
 
 export const photography = {
   "en": {
+    "loading": "Loading a sharper image…",
+    "loadError": "Couldn’t load the larger image. The preview is still available.",
+    "retry": "Retry",
     "title": "My Photos",
     "description": "Photographs by JoeyDDong.",
     "intro": "I’m an amateur photography enthusiast, and this is a collection of my photographs. In my spare time, I like walking through streets and alleys with my camera and photographing things I find beautiful. These photos show the world as I see it.",
@@ -118,6 +41,9 @@ export const photography = {
     "invitation": "I’d like to show you the world as I see it!"
   },
   "zh": {
+    "loading": "高清图加载中…",
+    "loadError": "高清图加载失败，仍可查看预览或打开原图。",
+    "retry": "重试",
     "title": "我的照片",
     "description": "JoeyDDong 的摄影作品。",
     "intro": "我是一名业余摄影爱好者，这里收录了我的一些摄影作品。闲暇的时候，我喜欢背着相机在街头巷尾走走，拍下生活中那些让我觉得好看的画面。这些照片记录着我眼中的世界。",
@@ -138,6 +64,9 @@ export const photography = {
     "invitation": "我想把我眼中的世界展示给你看！"
   },
   "ja": {
+    "loading": "高画質の写真を読み込み中…",
+    "loadError": "高画質の写真を読み込めませんでした。プレビューは引き続き見られます。",
+    "retry": "再試行",
     "title": "私の写真",
     "description": "JoeyDDong の写真。",
     "intro": "趣味で写真を撮っています。ここには、これまでに撮った写真をいくつか載せています。時間があるときは、カメラを持って街を歩き、きれいだなと思った景色を撮るのが好きです。写真には、私の目に映った世界が残っています。",
