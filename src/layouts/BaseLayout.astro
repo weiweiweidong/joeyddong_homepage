@@ -32,7 +32,7 @@ const canonical = new URL(pagePath(locale, page === 'notFound' ? 'home' : page),
       const page = document.documentElement.dataset.page;
       const url = new URL(window.location.href);
       const requested = url.searchParams.get('lang');
-      if ((page === 'home' || page === 'portfolio' || page === 'photography' || page === 'projects' || page === 'projects/gravity-garden' || page === 'projects/cat-yard' || page === 'projects/porsche-garage' || page === 'projects/fade-py') && isLocale(current)) {
+      if ((page === 'home' || page === 'portfolio' || page === 'photography' || page === 'projects' || page === 'projects/gravity-garden' || page === 'projects/cat-yard' || page === 'projects/porsche-garage' || page === 'projects/fade-py' || page === 'projects/nook') && isLocale(current)) {
         // An explicit localized URL wins; unprefixed pages use the saved/browser choice.
         const preferred = isLocale(requested) ? requested : current !== 'en' ? current : readLocale() ?? browserLocale();
         rememberLocale(preferred);
@@ -46,7 +46,7 @@ const canonical = new URL(pagePath(locale, page === 'notFound' ? 'home' : page),
   </head>
   <body>
     {page !== 'notFound' && <AnimatedBackground />}
-    <a class="skip-link" href="#main-content">{messages[locale].skip}</a>
+    <a class="skip-link" data-site-skip href="#main-content">{messages[locale].skip}</a>
     <Header locale={locale} page={page} />
     <slot />
     <Footer locale={locale} />

@@ -8,15 +8,15 @@ const copy = messages[locale];
 ---
 
 <header class="site-header shell" id="top">
-  <a class="wordmark" href={pagePath(locale)} aria-label={`${site.name} — Home`}>{site.name}<span>.</span></a>
-  <nav class="site-navigation" id="site-navigation" aria-label={copy.mainNavigation}>
+  <a class="wordmark" data-site-home href={pagePath(locale)} aria-label={`${site.name} — Home`}>{site.name}<span>.</span></a>
+  <nav class="site-navigation" data-site-nav id="site-navigation" aria-label={copy.mainNavigation}>
     {navigation(locale).map((item) => (
-      <a href={item.href} aria-current={item.key === page || (item.key === 'projects' && page.startsWith('projects/')) ? 'page' : undefined}>{copy.navigation[item.key]}</a>
+      <a data-site-nav-item={item.key} href={item.href} aria-current={item.key === page || (item.key === 'projects' && page.startsWith('projects/')) ? 'page' : undefined}>{copy.navigation[item.key]}</a>
     ))}
   </nav>
   <div class="header-actions">
-    <button class="menu-toggle" type="button" aria-label={copy.menu} aria-expanded="false" aria-controls="site-navigation">
-      <span class="menu-label">{copy.menu}</span><span class="menu-symbol" aria-hidden="true">+</span>
+    <button class="menu-toggle" data-site-menu type="button" aria-label={copy.menu} aria-expanded="false" aria-controls="site-navigation">
+      <span class="menu-label" data-site-menu-label>{copy.menu}</span><span class="menu-symbol" aria-hidden="true">+</span>
     </button>
     <LanguageSwitcher locale={locale} page={page === 'notFound' ? 'home' : page} />
   </div>

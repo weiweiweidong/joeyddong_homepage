@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/weiweiweidong/home_simulator",
+  "sourceCommit": "a1a38c284a7ca23a38ea05d21c683153b614ec9f",
+  "sourceDirty": false,
+  "bundleSha256": "e81c2569a561ddf7508153f10182071d0debb1cd4ef60fb86c1f41620844f77a",
+  "files": {
+    "3rdpartylicenses.txt": "c2ca3cdd764d0c414ea87091765f5deabc1563c3ca5f48ba1427ccca2876b67f",
+    "favicon.svg": "c7a91f5d6a0f8c1b0dca89002cda62757cde15aed618261fa145e92cf5f497c4",
+    "index.html": "b7719cc79f471cd4badc0cb128cb32688e9234370add34498d85f18e9b4dfe3f",
+    "main-5UWOEQ22.js": "81248f48cfa6559e8e3985687d6bf4ac7bbb41f0a0c30a5d1e5b2e8d3f6697fa",
+    "media/dm-sans-latin-wght-normal-X7UMQEPN.woff2": "9fea608a947e67020c33cad9a6fe3d60c54119dfb8cff87768a8117a15ed7543",
+    "styles-G6M6IWHO.css": "e55851cc4171c37617c51b4b737f2891ec35328168f09aef1bbb545672c7ee17"
+  }
+}

@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { pagePath, type Locale } from '../lib/i18n';
+import { projects } from '../lib/projects';
+import { nookCopy, nookTags, nookSource } from '../lib/nook-copy';
+import { site } from '../lib/site';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = nookCopy[locale];
+---
+<BaseLayout locale={locale} page="projects/nook" title={`${copy.name} — ${site.name}`} description={copy.description}>
+  <main class="nook-main" id="main-content" data-nook-page data-locale={locale}>
+    <header class="nook-intro">
+      <a class="project-back" data-nook-back href={pagePath(locale, 'projects')}><span aria-hidden="true">←</span> <span data-nook-back-label>{projects[locale].backToProjects}</span></a>
+      <p class="eyebrow">04 / VIBE CODING</p>
+      <h1 data-nook-copy="name">{copy.name}</h1>
+      <p class="description" data-nook-copy="description">{copy.description}</p>
+      <ul class="nook-tags" aria-label={projects[locale].tagsLabel}>{nookTags.map(tag => <li>{tag}</li>)}</ul>
+    </header>
+    <div class="nook-context">
+      <section aria-labelledby="nook-features-title">
+        <h2 id="nook-features-title" data-nook-copy="featuresTitle">{copy.featuresTitle}</h2>
+        <ul class="nook-features">
+          <li data-nook-copy="featurePlan">{copy.featurePlan}</li>
+          <li data-nook-copy="featureScene">{copy.featureScene}</li>
+          <li data-nook-copy="featureEditing">{copy.featureEditing}</li>
+        </ul>
+      </section>
+      <section aria-labelledby="nook-purpose-title">
+        <h2 id="nook-purpose-title" data-nook-copy="purposeTitle">{copy.purposeTitle}</h2>
+        <p data-nook-copy="purpose">{copy.purpose}</p>
+        <p data-nook-copy="learning">{copy.learning}</p>
+      </section>
+    </div>
+    <section class="nook-workbench" aria-label={copy.frameTitle} data-nook-workbench aria-busy="true">
+      <iframe id="nook-demo" title={copy.frameTitle} data-src="/demos/nook/" allow="fullscreen"></iframe>
+      <div class="nook-status" data-nook-status role="status" aria-live="polite">
+        <p data-nook-status-text>{copy.loading}</p>
+        <button type="button" data-nook-retry hidden>{copy.retry}</button>
+      </div>
+    </section>
+    <noscript><p class="nook-notes">JavaScript is required for this demo. / 此 Demo 需要 JavaScript。 / このデモにはJavaScriptが必要です。</p></noscript>
+    <div class="nook-notes">
+      <p data-nook-copy="instructions">{copy.instructions}</p>
+      <a href={nookSource} target="_blank" rel="noopener noreferrer"><span data-nook-copy="source">{copy.source}</span> ↗</a>
+    </div>
+  </main>
+</BaseLayout>
+<script>
+  import { initNookPage } from '../lib/nook-controller';
+  initNookPage();
+</script>
+<style>
+  .nook-main { width: 100%; max-width: 1568px; margin-inline: auto; padding: clamp(40px, 6vw, 80px) var(--page-gutter) 90px; }
+  .nook-intro { max-width: 850px; margin-bottom: 36px; }
+  .project-back { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-bottom: 24px; font-size: 14px; }
+  .project-back:hover, .nook-notes a:hover { text-decoration: underline; }
+  h1 { margin-top: 20px; font-size: clamp(44px, 6.5vw, 88px); line-height: 1.12; letter-spacing: -.045em; }
+  .description { max-width: 700px; margin-top: 24px; font-size: 18px; line-height: 1.8; }
+  .nook-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+  .nook-tags li { padding: 4px 10px; border: 1px solid var(--color-line); border-radius: 5px; font-size: 12px; }
+  .nook-context { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); max-width: 1200px; margin-bottom: 40px; padding-top: 28px; border-top: 1px solid var(--color-line); }
+  .nook-context h2 { margin: 0; font-size: 20px; line-height: 1.5; letter-spacing: -.02em; }
+  .nook-context p, .nook-features { margin: 14px 0 0; font-size: 15px; line-height: 1.85; }
+  .nook-features { padding-left: 20px; list-style: disc; }
+  .nook-features li + li { margin-top: 10px; }
+  .nook-context p + p { margin-top: 12px; }
+  .nook-workbench { position: relative; width: 100%; max-width: 1440px; margin-inline: auto; overflow: hidden; border-radius: 14px; background: #f7f7f2; color: #3c493c; box-shadow: 0 24px 60px #441e2826; }
+  iframe { display: block; width: 100%; height: 760px; border: 0; }
+  .nook-status { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 20px; padding: 24px; background: #f7f7f2; text-align: center; }
+  .nook-status[hidden], [data-nook-retry][hidden] { display: none; }
+  [data-nook-retry] { min-height: 44px; padding: 10px 20px; border: 1px solid #56634b; border-radius: 8px; color: inherit; background: transparent; cursor: pointer; font: inherit; }
+  .nook-notes { margin-top: 24px; max-width: 850px; font-size: 14px; line-height: 1.9; }
+  .nook-notes a { display: inline-flex; min-height: 44px; align-items: center; gap: 5px; margin-top: 6px; }
+  @media (max-width: 700px) {
+    .nook-context { grid-template-columns: 1fr; margin-inline: 12px; padding-top: 24px; }
+    .nook-context section + section { padding-top: 24px; border-top: 1px solid var(--color-line); }
+ iframe { height: 680px; } .nook-main { padding-inline: 12px; } .nook-intro, .nook-notes { margin-inline: 12px; } h1 { font-size: 42px; } }
+</style>

@@ -14,7 +14,9 @@
     "preview": "astro preview --host 127.0.0.1",
     "porsche:prepare": "node scripts/prepare-porsche-model.mjs",
     "photography:prepare": "node scripts/prepare-photography.mjs",
-    "photography:test": "node --experimental-strip-types --test tests/photography-loading.test.mjs"
+    "photography:test": "node --experimental-strip-types --test tests/photography-loading.test.mjs",
+    "nook:sync": "node scripts/sync-nook.mjs",
+    "nook:test": "node --experimental-strip-types --test tests/nook-*.test.mjs"
   },
   "dependencies": {
     "astro": "7.3.8",

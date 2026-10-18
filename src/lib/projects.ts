@@ -1,4 +1,5 @@
 import type { Locale } from './i18n';
+import { nookCopy, nookTags } from './nook-copy';
 import { catYardCopy } from './cat-yard-copy';
 import { porscheCopy } from './porsche-copy';
 import { fadeCopy, fadeTags, fadeExamples } from './fade-py';
@@ -61,4 +62,5 @@ export const projectCatalog = [
   } },
   { id: 'cat-yard', page: 'projects/cat-yard', category: 'VIBE CODING', label: 'A LITTLE YARD / 002', tags: ['SVG', 'Interactive playground'], content: catYardCopy },
   { id: 'porsche-garage', page: 'projects/porsche-garage', category: 'VIBE CODING', label: 'PORSCHE GARAGE / 003', tags: ['Three.js', '3D interaction'], content: porscheCopy },
+  { id: 'nook', page: 'projects/nook', category: 'VIBE CODING', label: 'NOOK / 004', tags: nookTags, content: nookCopy },
 ] as const;

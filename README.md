@@ -99,3 +99,11 @@ Three original repository images and their precomputed grayscale heatmaps are se
 After adding or changing source photographs, run `npm run photography:prepare` once with network access. It downloads only resized 320/640/960px WebP images, validates full decoding with sharp, and atomically publishes the local files and manifest. Unchanged valid images are reused. Keep the generated `public/images/photography/` files and `src/lib/photography-assets.json` with the source; normal builds and deployments do not regenerate images or require OSS access.
 
 Run `npm run photography:test` to check HD sizing, stale-request protection, failures, retry, closing, and reuse. The viewer uses local previews while loading and never preloads neighboring HD photos. “Open original image” retains the unchanged original URL.
+
+## Nook home design demo
+
+Projects → Vibe Coding includes **Nook**, an Angular + Three.js room-design workbench. Routes: `/projects/nook/`, `/zh/projects/nook/`, `/ja/projects/nook/`. The static card loads no Angular code; the detail page embeds the committed same-origin bundle in `public/demos/nook/`.
+
+Language changes on this detail page update the site and simulator without reloading the iframe, retaining in-progress editing and undo history. Designs require manual browser-local saving; refreshing or leaving discards unsaved edits. Other pages keep their existing language navigation.
+
+To update the simulator, install dependencies in its repository, then run `npm run nook:sync -- --source ../home_simulator` from this repository. Normal `npm run build` is Astro-only and needs no adjacent repository. Validate with `npm run nook:test`, `npm run check`, and `npm run build`. See [the integration guide](docs/NOOK_INTEGRATION.md) for the protocol, provenance and verification details.

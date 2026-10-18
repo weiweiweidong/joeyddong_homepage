@@ -8,13 +8,13 @@ const optionNames: Record<Locale, string> = { en: 'English', zh: '中文', ja: '
 <details class="language-switcher">
   <summary class="language-toggle" aria-label={`${messages[locale].chooseLanguage}: ${optionNames[locale]}`}>
     <svg class="language-globe" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
-    <span>{languageNames[locale]}</span>
+    <span data-language-current>{languageNames[locale]}</span>
     <svg class="language-chevron" viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg>
   </summary>
   <nav class="language-options" aria-label={messages[locale].chooseLanguage}>
     {locales.map((language) => (
       <a href={`${pagePath(language, page)}?lang=${language}`} lang={htmlLanguages[language]} hreflang={htmlLanguages[language]} data-language={language} aria-label={optionNames[language]} aria-current={locale === language ? 'true' : undefined}>
-        <span>{optionNames[language]}</span><span class="language-check" aria-hidden="true">{locale === language ? '✓' : ''}</span>
+        <span>{optionNames[language]}</span><span class="language-check" data-language-check aria-hidden="true">{locale === language ? '✓' : ''}</span>
       </a>
     ))}
   </nav>
@@ -25,9 +25,20 @@ const optionNames: Record<Locale, string> = { en: 'English', zh: '中文', ja: '
   const dropdown = document.querySelector<HTMLDetailsElement>('.language-switcher');
   const summary = dropdown?.querySelector<HTMLElement>('summary');
   dropdown?.querySelectorAll<HTMLAnchorElement>('[data-language]').forEach((link) => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (event) => {
       const locale = link.dataset.language;
-      if (isLocale(locale)) rememberLocale(locale);
+      if (!isLocale(locale)) return;
+      // Only Nook opts into live switching, after its controller has attached.
+      if (document.documentElement.dataset.nookLocaleReady === 'true' &&
+          event.button === 0 && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey &&
+          (!link.target || link.target === '_self') && !link.hasAttribute('download')) {
+        event.preventDefault();
+        document.dispatchEvent(new CustomEvent('site:locale-request', { detail: { locale } }));
+        dropdown?.removeAttribute('open');
+        summary?.focus();
+      } else {
+        rememberLocale(locale);
+      }
     });
   });
   document.addEventListener('click', (event) => {

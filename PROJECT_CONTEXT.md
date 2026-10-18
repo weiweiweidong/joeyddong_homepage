@@ -240,3 +240,10 @@ Photography 第 69 张照片修复：其原文件名 `20211030-DSC01103 2.jpg` �
 ## 2026-10-14 Photography 优化版本发布授权
 
 用户明确授权将当前摄影图片加载优化版本使用中文 commit 提交并推送 GitHub main，然后部署现有网站。本次包含234个本地预览文件、来源及尺寸清单、按需高清加载逻辑、测试和维护说明；此前本轮“仅本地”的描述为历史状态。沿用现有 Cloudflare Worker 与主域名配置。
+
+
+## Nook 三语模拟器集成与发布（2026-10-18）
+
+Projects 的 Vibe Coding 栏目新增 Nook 卡片与三语详情页。详情页复用主页布局，包含功能与项目意义介绍，并以同源 iframe 加载 `public/demos/nook/index.html`；显式 HTML 入口解决 Astro 开发模式不解析静态目录的问题。只有该详情页接管主页语言切换，更新外层文案和 URL，通过版本 1 消息协议控制模拟器，保留设计、相机和撤销历史。普通主页构建不依赖模拟器仓库；更新资源使用 `npm run nook:sync -- --source ../home_simulator`，记录来源提交和校验摘要。
+
+用户已明确授权将当前主页版本使用中文 commit 提交并推送 GitHub，随后部署现有 Cloudflare Worker `joeyddong-homepage`。此前“仅本地、不推送或部署”描述当时状态，不再限制本次发布。沿用现有域名、重定向及 Blog 地址，不改变其他站点配置。接入、验证记录和截图见 `docs/NOOK_INTEGRATION.md`。
